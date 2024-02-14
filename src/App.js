@@ -253,6 +253,7 @@ function App() {
               });
                 setDatabaseName(databaseState.databaseName);
                 setTables(adjustedTables);
+                window.location.reload();
             } else {
                 alert("Invalid file format.");
             }
