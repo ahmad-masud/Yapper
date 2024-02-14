@@ -46,4 +46,4 @@ Before you begin, ensure you have the latest version of Node.js and npm installe
 Contributions are welcome. Please fork the project, create your feature branch, commit your changes, push to the branch, and open a pull request.
 
 ## License
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See [MIT License](LICENSE) for more information.
