@@ -156,7 +156,7 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
 
           return (
             <li className='attribute' key={index}> 
-              {attribute.name}<span className="unfocus">{`(${attribute.type}${attribute.length ? `(${attribute.length})` : ''})${constraintsStr}`}</span>
+              <div>{attribute.name} <span className="unfocus">{`(${attribute.type}${attribute.length ? `(${attribute.length})` : ''})${constraintsStr}`}</span></div>
               <button aria-label='delete attribute' onClick={() => handleDeleteAttribute(index)} className="attribute-action-button"><i className="fa-solid fa-xmark"></i></button>
             </li>
           );
