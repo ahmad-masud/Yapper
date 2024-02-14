@@ -239,9 +239,20 @@ function App() {
         const content = e.target.result;
         try {
             const databaseState = JSON.parse(content);
-            if (databaseState.databaseName && databaseState.tables) {
+            if (databaseState.databaseName || databaseState.tables) {
+              const adjustedTables = databaseState.tables.map(table => {
+                let { positionX, positionY } = table;
+
+                if (positionX > window.innerWidth - 400) {
+                  positionX = window.innerWidth - 400;
+                }
+                if (positionY > window.innerHeight - 400) {
+                  positionY = window.innerHeight - 400;
+                }
+                return { ...table, positionX, positionY };
+              });
                 setDatabaseName(databaseState.databaseName);
-                setTables(databaseState.tables);
+                setTables(adjustedTables);
             } else {
                 alert("Invalid file format.");
             }
