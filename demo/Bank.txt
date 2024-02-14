@@ -1,0 +1,353 @@
+{
+  "databaseName": "Bank",
+  "tables": [
+    {
+      "id": 1,
+      "name": "Customer",
+      "color": "Crimson",
+      "positionX": 796,
+      "positionY": 206,
+      "attributes": [
+        {
+          "name": "customerID",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": true,
+            "autoIncrement": false
+          }
+        },
+        {
+          "name": "firstName",
+          "type": "VARCHAR",
+          "length": "20",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false
+          }
+        },
+        {
+          "name": "lastName",
+          "type": "VARCHAR",
+          "length": "20",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false
+          }
+        },
+        {
+          "name": "income",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false
+          }
+        },
+        {
+          "name": "birthDate",
+          "type": "DATE",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Account",
+      "color": "MediumSeaGreen",
+      "positionX": 396,
+      "positionY": 231,
+      "attributes": [
+        {
+          "name": "accNumber",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": true,
+            "autoIncrement": false
+          }
+        },
+        {
+          "name": "type",
+          "type": "VARCHAR",
+          "length": "20",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false
+          }
+        },
+        {
+          "name": "balance",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false
+          }
+        },
+        {
+          "name": "branchNumber",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false,
+            "foreignKey": {
+              "reference": "Branch"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Branch",
+      "color": "CornFlowerBlue",
+      "positionX": 351,
+      "positionY": 477,
+      "attributes": [
+        {
+          "name": "branchNumber",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": true,
+            "autoIncrement": false
+          }
+        },
+        {
+          "name": "branchName",
+          "type": "VARCHAR",
+          "length": "20",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false
+          }
+        },
+        {
+          "name": "managerSIN",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false,
+            "foreignKey": {
+              "reference": "Employee"
+            }
+          }
+        },
+        {
+          "name": "budget",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Owns",
+      "color": "DarkViolet",
+      "positionX": 1104,
+      "positionY": 296,
+      "attributes": [
+        {
+          "name": "customerID",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false,
+            "foreignKey": {
+              "reference": "Customer"
+            }
+          }
+        },
+        {
+          "name": "accNumber",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false,
+            "foreignKey": {
+              "reference": "Account"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Transactions",
+      "color": "Orange",
+      "positionX": 1116,
+      "positionY": 499,
+      "attributes": [
+        {
+          "name": "transNumber",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": true,
+            "autoIncrement": false
+          }
+        },
+        {
+          "name": "accNumber",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false,
+            "foreignKey": {
+              "reference": "Account"
+            }
+          }
+        },
+        {
+          "name": "amount",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Employee",
+      "color": "Crimson",
+      "positionX": 736,
+      "positionY": 495,
+      "attributes": [
+        {
+          "name": "sin",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": true,
+            "autoIncrement": false
+          }
+        },
+        {
+          "name": "firstName",
+          "type": "VARCHAR",
+          "length": "20",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false
+          }
+        },
+        {
+          "name": "lastName",
+          "type": "VARCHAR",
+          "length": "20",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false
+          }
+        },
+        {
+          "name": "salary",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false
+          }
+        },
+        {
+          "name": "branchNumber",
+          "type": "INT",
+          "length": "",
+          "defaultValue": "",
+          "constraints": {
+            "notNull": false,
+            "unique": false,
+            "primaryKey": false,
+            "autoIncrement": false,
+            "foreignKey": {
+              "reference": "Branch"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

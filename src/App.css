@@ -14,10 +14,3 @@ body {
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
 }
-
-.App {
-   display: flex;
-   flex-direction: column;
-   justify-content: space-between;
-   min-height: 100vh;
-}

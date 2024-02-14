@@ -10,6 +10,7 @@ function AttributeForm({ onCancel, onSubmit }) {
   const [attributeUnique, setAttributeUnique] = useState(false);
   const [attributePrimaryKey, setAttributePrimaryKey] = useState(false);
   const [attributeAutoIncrement, setAttributeAutoIncrement] = useState(false);
+  const [foreignKeyReference, setForeignKeyReference] = useState(''); // State for foreign key reference
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,10 +24,15 @@ function AttributeForm({ onCancel, onSubmit }) {
         unique: attributeUnique,
         primaryKey: attributePrimaryKey,
         autoIncrement: attributeAutoIncrement,
+        foreignKey: foreignKeyReference ? { reference: foreignKeyReference } : undefined, // Include foreign key info if provided
       },
     });
 
     // Reset form
+    resetForm();
+  };
+
+  const resetForm = () => {
     setAttributeName('');
     setAttributeType('INT');
     setAttributeLength('');
@@ -35,6 +41,7 @@ function AttributeForm({ onCancel, onSubmit }) {
     setAttributeUnique(false);
     setAttributePrimaryKey(false);
     setAttributeAutoIncrement(false);
+    setForeignKeyReference('');
   };
 
   return (
@@ -87,6 +94,12 @@ function AttributeForm({ onCancel, onSubmit }) {
                   placeholder="Default Value"
                   value={attributeDefaultValue}
                   onChange={(e) => setAttributeDefaultValue(e.target.value)}
+                />
+                <input
+                  type="text"
+                  placeholder="Foreign Key Reference (Leave blank if not a foreign key)"
+                  value={foreignKeyReference}
+                  onChange={(e) => setForeignKeyReference(e.target.value)}
                 />
                 <label>
                   <input

@@ -1,7 +1,7 @@
 import './Content.css';
 import Table from '../Table/Table.js'; // Adjust the import path as necessary
 
-function Content({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAttribute, onDeleteAttribute }) {
+function Content({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAttribute, onDeleteAttribute, onUpdatePosition }) {
     return (
         <div className="content">
             {tables.map((table) => (
@@ -14,6 +14,9 @@ function Content({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAtt
                     onAddAttribute={onAddAttribute}
                     onDeleteAttribute={onDeleteAttribute}
                     color={table.color}
+                    positionX={table.positionX}
+                    positionY={table.positionY}
+                    onUpdatePosition={onUpdatePosition}
                 />
             ))}
         </div>
