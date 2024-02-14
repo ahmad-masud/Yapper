@@ -13,4 +13,6 @@ body {
    font-family: Arial, Helvetica, sans-serif;
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
+   background-size: 40px 40px;
+   background-image: radial-gradient(circle, rgba(0,0,0,0.5) 1px, rgba(0, 0, 0, 0) 1px);
 }

@@ -36,6 +36,11 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1em;
+    outline: none;
+}
+
+.form-container input[type="checkbox"] {
+    margin-right: 5px;
 }
 
 .form-container select option {

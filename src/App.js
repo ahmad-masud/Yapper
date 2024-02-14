@@ -7,7 +7,7 @@ import Prompt from './components/Prompt/Prompt.js';
 
 function App() {
   const [tables, setTables] = useState([]);
-  const [databaseName, setDatabaseName] = useState("");
+  const [databaseName, setDatabaseName] = useState('');
   const [showForm, setShowForm] = useState(false); // State to control form visibility
   const [formAction, setFormAction] = useState(''); // State to determine form action (addTable or editDatabaseName)
   const [showPrompt, setShowPrompt] = useState(false);

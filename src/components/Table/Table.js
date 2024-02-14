@@ -118,6 +118,21 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
             // Check if the new attribute is a primary key and if another primary key already exists
             const primaryKeyAlreadyExists = table.attributes.some(attr => attr.constraints.primaryKey);
 
+            // Condition to prevent users from specifying length unless required
+            const typesRequiringLength = ['CHAR', 'VARCHAR', 'BINARY', 'VARBINARY']; // Example types requiring a length
+            const doesTypeRequireLength = typesRequiringLength.includes(attributeDetails.type);
+            const isLengthProvided = attributeDetails.length > 0;
+
+            if (!doesTypeRequireLength && isLengthProvided) {
+              alert("This attribute type does not require a length.");
+              setIsAttributeFormVisible(false);
+              return;
+            } else if (doesTypeRequireLength && !isLengthProvided) {
+              alert("This attribute type requires a length.");
+              setIsAttributeFormVisible(false);
+              return;
+            }
+
             if (attributeDetails.constraints.primaryKey && primaryKeyAlreadyExists) {
               alert("A primary key already exists. Only one primary key is allowed per table.");
             } else if (attributeDetails.constraints.foreignKey) {
