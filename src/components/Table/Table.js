@@ -1,6 +1,6 @@
 import './Table.css'; // Ensure you have a CSS file for styling
 import AttributeForm from '../AttributeForm/AttributeForm.js'; // Adjust the import path as needed
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback , useRef } from 'react';
 import GenericForm from '../GenericForm/GenericForm.js'; // Adjust the path as needed
 
 function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNames, onDeleteAttribute, color, positionX, positionY, onUpdatePosition }) {
@@ -9,6 +9,7 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: positionX , y: positionY });
   const [relPosition, setRelPosition] = useState(null); // Relative position to the cursor
+  const tableRef = useRef(null);
 
   const handleUpdatePosition = useCallback((newX, newY) => {
     onUpdatePosition(table.id, newX, newY);
@@ -31,15 +32,30 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
     }
   }, [isDragging, position, handleUpdatePosition]);  
 
+  const getTableDimensions = () => {
+    if (tableRef.current) {
+      const dimensions = tableRef.current.getBoundingClientRect();
+      return { width: dimensions.width, height: dimensions.height };
+    }
+    return { width: 0, height: 0 }; // Fallback dimensions
+  };
+
   // Memoize onMouseMove similarly
   const onMouseMove = useCallback((e) => {
     if (!isDragging) {
       return;
     }
+    const { width: tableWidth, height: tableHeight } = getTableDimensions();
+    // Calculate new positions
+    const newX = e.pageX - relPosition.x;
+    const newY = e.pageY - relPosition.y;
+
+    const constrainedX = Math.min(Math.max(newX, 0), window.innerWidth - tableWidth);
+    const constrainedY = Math.min(Math.max(newY, 50), window.innerHeight - tableHeight);
     // Update position logic...
     setPosition({
-      x: e.pageX - relPosition.x,
-      y: e.pageY - relPosition.y,
+      x: constrainedX,
+      y: constrainedY,
     });
   }, [isDragging, relPosition]); // Ensure all variables used in the function are listed in the dependency array
 
@@ -129,6 +145,7 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
         style= {window.innerWidth >= 600 ? { left: `${position.x}px`, top: `${position.y}px`, position: 'absolute' } : {}}
         onMouseDown={onMouseDown}
         className="table-container"
+        ref={tableRef}
       >
         <div className="table-header" style={{background: color}}>
           <h2 className='table-name'>{table.name}</h2>
