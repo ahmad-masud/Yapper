@@ -1,4 +1,5 @@
 # Database Schema Constructor
+![DBSC](/resources/dbsc.gif)
 
 ## Description
 The Database Schema Constructor is a web application for visually creating and manipulating database schemas. It allows users to add tables, define attributes, and set constraints like `NOT NULL`, `UNIQUE`, `PRIMARY KEY`, and `AUTO_INCREMENT`. Features include SQL query generation and download, draggable tables for layout flexibility, and responsive design. Schemas can be persisted in local storage for future sessions.

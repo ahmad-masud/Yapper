@@ -5,8 +5,8 @@
       "id": 1,
       "name": "Customer",
       "color": "Crimson",
-      "positionX": 796,
-      "positionY": 206,
+      "positionX": 60,
+      "positionY": 98,
       "attributes": [
         {
           "name": "customerID",
@@ -74,8 +74,8 @@
       "id": 2,
       "name": "Account",
       "color": "MediumSeaGreen",
-      "positionX": 396,
-      "positionY": 231,
+      "positionX": 423,
+      "positionY": 377,
       "attributes": [
         {
           "name": "accNumber",
@@ -134,8 +134,8 @@
       "id": 3,
       "name": "Branch",
       "color": "CornFlowerBlue",
-      "positionX": 351,
-      "positionY": 477,
+      "positionX": 59,
+      "positionY": 378,
       "attributes": [
         {
           "name": "branchNumber",
@@ -194,8 +194,8 @@
       "id": 4,
       "name": "Owns",
       "color": "DarkViolet",
-      "positionX": 1104,
-      "positionY": 296,
+      "positionX": 698,
+      "positionY": 98,
       "attributes": [
         {
           "name": "customerID",
@@ -233,8 +233,8 @@
       "id": 5,
       "name": "Transactions",
       "color": "Orange",
-      "positionX": 1116,
-      "positionY": 499,
+      "positionX": 699,
+      "positionY": 217,
       "attributes": [
         {
           "name": "transNumber",
@@ -281,8 +281,8 @@
       "id": 6,
       "name": "Employee",
       "color": "Crimson",
-      "positionX": 736,
-      "positionY": 495,
+      "positionX": 340,
+      "positionY": 98,
       "attributes": [
         {
           "name": "sin",
