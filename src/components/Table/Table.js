@@ -203,11 +203,13 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
             constraints.push(`FOREIGN KEY (${attribute.constraints.foreignKey.reference})`);
           }
           
-          const constraintsStr = constraints.length > 0 ? ` (${constraints.join(", ")})` : "";
+          const constraintsStr = constraints.length > 0 ? ` ${constraints.join(", ")}` : "";
 
           return (
             <li className='attribute' key={index}> 
-              <div>{attribute.name} <span className="unfocus">{`(${attribute.type}${attribute.length ? `(${attribute.length})` : ''})${constraintsStr}`}</span></div>
+              <div>
+                <span className={(attribute.constraints.primaryKey) ? 'underline' : null}>{attribute.name}</span>
+                <span className="unfocus">{` ${attribute.type}${attribute.length ? `(${attribute.length}),` : ','}${constraintsStr}`}</span></div>
               <button aria-label='delete attribute' onClick={() => handleDeleteAttribute(index)} className="attribute-action-button"><i className="fa-solid fa-xmark"></i></button>
             </li>
           );
