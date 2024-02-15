@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback , useRef } from 'react';
 import GenericForm from '../GenericForm/GenericForm.js';
 import Prompt from '../Prompt/Prompt.js';
 
-function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNames, onDeleteAttribute, color, positionX, positionY, onUpdatePosition }) {
+function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNames, onDeleteAttribute, color, positionX, positionY, onUpdatePosition, onUpdateWidth }) {
   const [isAttributeFormVisible, setIsAttributeFormVisible] = useState(false);
   const [isEditFormVisible, setIsEditFormVisible] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -15,6 +15,11 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
   const [promptAction, setPromptAction] = useState('');
   const tableRef = useRef(null);
 
+
+  useEffect(() => {
+    onUpdateWidth(table.id, getTableDimensions().width);
+  }, [table, onUpdateWidth]);
+  
   const handleUpdatePosition = useCallback((newX, newY) => {
     onUpdatePosition(table.id, newX, newY);
   }, [table.id, onUpdatePosition]);
@@ -31,9 +36,8 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
   const onMouseUp = useCallback(() => {
     if (isDragging) {
       setIsDragging(false);
-      handleUpdatePosition(position.x, position.y);
     }
-  }, [isDragging, position, handleUpdatePosition]);  
+  }, [isDragging]);  
 
   const getTableDimensions = () => {
     if (tableRef.current) {
@@ -59,7 +63,9 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
       x: constrainedX,
       y: constrainedY,
     });
-  }, [isDragging, relPosition]); 
+
+    handleUpdatePosition(position.x, position.y);
+  }, [isDragging, relPosition, position, handleUpdatePosition]); 
 
   useEffect(() => {
     if (isDragging) {
@@ -130,50 +136,11 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
       )}
       {isAttributeFormVisible && (
         <AttributeForm
+          tables={tables}
+          thisTable={table}
           onCancel={() => setIsAttributeFormVisible(false)}
           onSubmit={(attributeDetails) => {
-            const primaryKeyAlreadyExists = table.attributes.some(attr => attr.constraints.primaryKey);
-
-            const typesRequiringLength = ['CHAR', 'VARCHAR', 'BINARY', 'VARBINARY'];
-            const doesTypeRequireLength = typesRequiringLength.includes(attributeDetails.type);
-            const isLengthProvided = attributeDetails.length > 0;
-
-            if (!doesTypeRequireLength && isLengthProvided) {
-              setIsAttributeFormVisible(false);
-              setPromptText("This attribute type does not require a length.");
-              setPromptAction('alert');
-              setShowPrompt(true);
-              return;
-            } else if (doesTypeRequireLength && !isLengthProvided) {
-              setIsAttributeFormVisible(false);
-              setPromptText("This attribute type requires a length.");
-              setPromptAction('alert');
-              setShowPrompt(true);
-              return;
-            }
-
-            if (attributeDetails.constraints.primaryKey && primaryKeyAlreadyExists) {
-              setPromptText("A primary key already exists. Only one primary key is allowed per table.");
-              setPromptAction('alert');
-              setShowPrompt(true);
-            } else if (attributeDetails.constraints.foreignKey) {
-              const foreignTableExists = allTableNames.includes(attributeDetails.constraints.foreignKey.reference);
-              const isNotSelfReference = attributeDetails.constraints.foreignKey.reference !== table.name;
-
-              if (!foreignTableExists) {
-                setPromptText("The foreign key must reference an existing table.");
-                setPromptAction('alert');
-                setShowPrompt(true);
-              } else if (!isNotSelfReference) {
-                setPromptText("The foreign key cannot reference its own table.");
-                setPromptAction('alert');
-                setShowPrompt(true);
-              } else {
-                onAddAttribute(table.id, attributeDetails);
-              }
-            } else {
-              onAddAttribute(table.id, attributeDetails);
-            }
+            onAddAttribute(table.id, attributeDetails);
             setIsAttributeFormVisible(false);
           }}
         />
@@ -194,22 +161,15 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
         </div>
         <ul className='attribute-list'>
         {table.attributes.map((attribute, index) => {
-          let constraints = [];
-          if (attribute.constraints.notNull) constraints.push("NOT NULL");
-          if (attribute.constraints.unique) constraints.push("UNIQUE");
-          if (attribute.constraints.primaryKey) constraints.push("PRIMARY KEY");
-          if (attribute.constraints.autoIncrement) constraints.push("AUTO_INCREMENT");
-          if (attribute.constraints.foreignKey && attribute.constraints.foreignKey.reference) {
-            constraints.push(`FOREIGN KEY (${attribute.constraints.foreignKey.reference})`);
-          }
-          
-          const constraintsStr = constraints.length > 0 ? ` ${constraints.join(", ")}` : "";
-
           return (
             <li className='attribute' key={index}> 
               <div>
-                <span className={(attribute.constraints.primaryKey) ? 'underline' : null}>{attribute.name}</span>
-                <span className="unfocus">{` ${attribute.type}${attribute.length ? `(${attribute.length}),` : ','}${constraintsStr}`}</span></div>
+                <span>
+                  {attribute.name}
+                  {attribute.constraints.primaryKey && <sup className='italic'>PK</sup>}
+                  {attribute.constraints.foreignKey && <sup className='italic'>FK</sup>}
+                </span>
+                <sub className="italic">{` (${attribute.type.toLowerCase()})`}</sub></div>
               <button aria-label='delete attribute' onClick={() => handleDeleteAttribute(index)} className="attribute-action-button"><i className="fa-solid fa-xmark"></i></button>
             </li>
           );

@@ -8,6 +8,7 @@
     min-height: 100px;
     min-width: 200px;
     cursor: move;
+    z-index: 100;
 }
   
 .table-header {
@@ -60,14 +61,8 @@
     margin-left: 10px;
 }
 
-.unfocus {
-    text-transform: lowercase;
-    opacity: 0.5;
+.italic {
     font-style: italic;
-}
-
-.underline {
-    text-decoration: underline;
 }
 
 @media screen and (max-width: 600px) {

@@ -49,6 +49,9 @@ function App() {
         if (attr.length) {
           attrSql += `(${attr.length})`;
         }
+        if (attr.values) {
+          attrSql += `(${attr.values})`;
+        }
         if (attr.constraints.notNull) {
           attrSql += ` NOT NULL`;
         }
@@ -64,8 +67,8 @@ function App() {
         if (attr.defaultValue) {
           attrSql += ` DEFAULT '${attr.defaultValue}'`;
         }
-        if (attr.constraints.foreignKey && attr.constraints.foreignKey.reference) {
-          foreignKeys.push(`  FOREIGN KEY (\`${attr.name}\`) REFERENCES ${attr.constraints.foreignKey.reference}`);
+        if (attr.constraints.foreignKey && attr.constraints.foreignKey.table && attr.constraints.foreignKey.attribute) {
+          foreignKeys.push(`  FOREIGN KEY (\`${attr.name}\`) REFERENCES ${attr.constraints.foreignKey.table}(${attr.constraints.foreignKey.attribute})`);
         }
         attributeDefinitions.push(attrSql);
       });
@@ -176,6 +179,12 @@ function App() {
   const handleUpdatePosition = (tableId, newPositionX, newPositionY) => {
     setTables(prevTables => prevTables.map(table => 
       table.id === tableId ? { ...table, positionX: newPositionX, positionY: newPositionY } : table
+    ));
+  };  
+
+  const handleUpdateWidth = (tableId, newWidth) => {
+    setTables(prevTables => prevTables.map(table => 
+      table.id === tableId ? { ...table, width: newWidth } : table
     ));
   };  
 
@@ -305,6 +314,7 @@ function App() {
         onAddAttribute={onAddAttribute}
         onDeleteAttribute={onDeleteAttribute}
         onUpdatePosition={handleUpdatePosition}
+        onUpdateWidth={handleUpdateWidth}
       />
     </div>
   );

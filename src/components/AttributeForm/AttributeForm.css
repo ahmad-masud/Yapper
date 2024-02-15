@@ -27,9 +27,17 @@
     gap: 10px;
 }
 
-.form-container input[type="text"],
-.form-container select {
+.form-container input[type="number"],
+.form-container input[type="text"] {
     padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    outline: none;
+}
+
+.form-container select {
+    padding: 10px 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1em;
