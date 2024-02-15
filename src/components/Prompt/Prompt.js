@@ -1,4 +1,4 @@
-import './Prompt.css'; // Make sure to create and style this accordingly
+import './Prompt.css';
 
 function Prompt({ question, onConfirm, onCancel }) {
   return (

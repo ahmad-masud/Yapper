@@ -29,15 +29,15 @@
 }
   
 .table-header-button {
-    font-size: 1em; /* Button text size */
-    color: #fff; /* Button text color */
-    border: none; /* Remove border */
-    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 1em;
+    color: #fff;
+    border: none;
+    cursor: pointer;
     background: none;
 }
   
 .attribute-list {
-    list-style: none; /* Remove default list styling */
+    list-style: none;
 }
 
 .attribute-list .attribute {
@@ -52,10 +52,10 @@
 }
 
 .attribute-action-button {
-    font-size: 1em; /* Button text size */
-    color: black; /* Button text color */
-    border: none; /* Remove border */
-    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 1em;
+    color: black;
+    border: none;
+    cursor: pointer;
     background: none;
     margin-left: 10px;
 }

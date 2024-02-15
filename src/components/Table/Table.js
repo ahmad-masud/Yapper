@@ -1,14 +1,18 @@
-import './Table.css'; // Ensure you have a CSS file for styling
-import AttributeForm from '../AttributeForm/AttributeForm.js'; // Adjust the import path as needed
+import './Table.css';
+import AttributeForm from '../AttributeForm/AttributeForm.js';
 import { useState, useEffect, useCallback , useRef } from 'react';
-import GenericForm from '../GenericForm/GenericForm.js'; // Adjust the path as needed
+import GenericForm from '../GenericForm/GenericForm.js';
+import Prompt from '../Prompt/Prompt.js';
 
 function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNames, onDeleteAttribute, color, positionX, positionY, onUpdatePosition }) {
   const [isAttributeFormVisible, setIsAttributeFormVisible] = useState(false);
   const [isEditFormVisible, setIsEditFormVisible] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: positionX , y: positionY });
-  const [relPosition, setRelPosition] = useState(null); // Relative position to the cursor
+  const [relPosition, setRelPosition] = useState(null);
+  const [showPrompt, setShowPrompt] = useState(false);
+  const [promptText, setPromptText] = useState('');
+  const [promptAction, setPromptAction] = useState('');
   const tableRef = useRef(null);
 
   const handleUpdatePosition = useCallback((newX, newY) => {
@@ -21,14 +25,13 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
       x: e.pageX - position.x,
       y: e.pageY - position.y,
     });
-    e.preventDefault(); // Prevent default drag behavior
+    e.preventDefault();
   };
 
-  // Memoize onMouseUp to prevent it from changing on every render
   const onMouseUp = useCallback(() => {
     if (isDragging) {
       setIsDragging(false);
-      handleUpdatePosition(position.x, position.y); // Update the position only once, when the drag ends
+      handleUpdatePosition(position.x, position.y);
     }
   }, [isDragging, position, handleUpdatePosition]);  
 
@@ -37,27 +40,26 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
       const dimensions = tableRef.current.getBoundingClientRect();
       return { width: dimensions.width, height: dimensions.height };
     }
-    return { width: 0, height: 0 }; // Fallback dimensions
+    return { width: 0, height: 0 };
   };
 
-  // Memoize onMouseMove similarly
   const onMouseMove = useCallback((e) => {
     if (!isDragging) {
       return;
     }
     const { width: tableWidth, height: tableHeight } = getTableDimensions();
-    // Calculate new positions
+
     const newX = e.pageX - relPosition.x;
     const newY = e.pageY - relPosition.y;
 
     const constrainedX = Math.min(Math.max(newX, 0), window.innerWidth - tableWidth);
     const constrainedY = Math.min(Math.max(newY, 50), window.innerHeight - tableHeight);
-    // Update position logic...
+
     setPosition({
       x: constrainedX,
       y: constrainedY,
     });
-  }, [isDragging, relPosition]); // Ensure all variables used in the function are listed in the dependency array
+  }, [isDragging, relPosition]); 
 
   useEffect(() => {
     if (isDragging) {
@@ -68,7 +70,6 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
       document.removeEventListener('mouseup', onMouseUp);
     }
 
-    // Cleanup function to remove event listeners
     return () => {
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -76,7 +77,7 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
   }, [isDragging, onMouseMove, onMouseUp]);
 
   const handleEditTableDetails = () => {
-    setIsEditFormVisible(true); // Show the form instead of using prompt
+    setIsEditFormVisible(true);
   };  
 
   const handleDelete = () => {
@@ -87,22 +88,38 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
     const isDuplicate = allTableNames.some(name => name.toLowerCase() === newName.toLowerCase() && name !== table.name);
     if (!isDuplicate) {
       onUpdateTable(table.id, newName);
-      setIsEditFormVisible(false); // Hide form after successful update
+      setIsEditFormVisible(false);
     } else {
-      alert("Table name already exists. Please choose a different name.");
+      setPromptText("Table name already exists. Please choose a different name.");
+      setPromptAction('alert');
+      setShowPrompt(true);
     }
   };
 
   const handleDeleteAttribute = (attributeIndex) => {
-    // Create a new array without the attribute to be deleted
     const updatedAttributes = table.attributes.filter((_, index) => index !== attributeIndex);
-    // Update the table's attributes list with this new array
     onDeleteAttribute(table.id, updatedAttributes);
   };
-  
 
+  const handleConfirm = () => {
+    if (promptAction === 'alert') {
+      setShowPrompt(false);
+    }
+  };
+  
+  const handleCancel = () => {
+    setShowPrompt(false);
+  };
+  
   return (
     <div>
+      {showPrompt && (
+        <Prompt
+          question={promptText}
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
+      )}
       {isEditFormVisible && (
         <GenericForm
           placeholder="Enter new table name"
@@ -115,44 +132,49 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
         <AttributeForm
           onCancel={() => setIsAttributeFormVisible(false)}
           onSubmit={(attributeDetails) => {
-            // Check if the new attribute is a primary key and if another primary key already exists
             const primaryKeyAlreadyExists = table.attributes.some(attr => attr.constraints.primaryKey);
 
-            // Condition to prevent users from specifying length unless required
-            const typesRequiringLength = ['CHAR', 'VARCHAR', 'BINARY', 'VARBINARY']; // Example types requiring a length
+            const typesRequiringLength = ['CHAR', 'VARCHAR', 'BINARY', 'VARBINARY'];
             const doesTypeRequireLength = typesRequiringLength.includes(attributeDetails.type);
             const isLengthProvided = attributeDetails.length > 0;
 
             if (!doesTypeRequireLength && isLengthProvided) {
-              alert("This attribute type does not require a length.");
               setIsAttributeFormVisible(false);
+              setPromptText("This attribute type does not require a length.");
+              setPromptAction('alert');
+              setShowPrompt(true);
               return;
             } else if (doesTypeRequireLength && !isLengthProvided) {
-              alert("This attribute type requires a length.");
               setIsAttributeFormVisible(false);
+              setPromptText("This attribute type requires a length.");
+              setPromptAction('alert');
+              setShowPrompt(true);
               return;
             }
 
             if (attributeDetails.constraints.primaryKey && primaryKeyAlreadyExists) {
-              alert("A primary key already exists. Only one primary key is allowed per table.");
+              setPromptText("A primary key already exists. Only one primary key is allowed per table.");
+              setPromptAction('alert');
+              setShowPrompt(true);
             } else if (attributeDetails.constraints.foreignKey) {
-              // Ensure the foreign key reference is to an existing table and not its own table
               const foreignTableExists = allTableNames.includes(attributeDetails.constraints.foreignKey.reference);
               const isNotSelfReference = attributeDetails.constraints.foreignKey.reference !== table.name;
 
               if (!foreignTableExists) {
-                alert("The foreign key must reference an existing table.");
+                setPromptText("The foreign key must reference an existing table.");
+                setPromptAction('alert');
+                setShowPrompt(true);
               } else if (!isNotSelfReference) {
-                alert("The foreign key cannot reference its own table.");
+                setPromptText("The foreign key cannot reference its own table.");
+                setPromptAction('alert');
+                setShowPrompt(true);
               } else {
-                // If no primary key conflict and foreign key is valid, proceed to add the new attribute
                 onAddAttribute(table.id, attributeDetails);
               }
             } else {
-              // If no primary key conflict and no foreign key or valid foreign key, proceed to add the new attribute
               onAddAttribute(table.id, attributeDetails);
             }
-            setIsAttributeFormVisible(false); // Close modal upon form submission
+            setIsAttributeFormVisible(false);
           }}
         />
       )}
@@ -172,18 +194,15 @@ function Table({ table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNa
         </div>
         <ul className='attribute-list'>
         {table.attributes.map((attribute, index) => {
-          // Construct a string with constraints
           let constraints = [];
           if (attribute.constraints.notNull) constraints.push("NOT NULL");
           if (attribute.constraints.unique) constraints.push("UNIQUE");
           if (attribute.constraints.primaryKey) constraints.push("PRIMARY KEY");
           if (attribute.constraints.autoIncrement) constraints.push("AUTO_INCREMENT");
-          // Check for foreign key constraint and add to constraints list
           if (attribute.constraints.foreignKey && attribute.constraints.foreignKey.reference) {
             constraints.push(`FOREIGN KEY (${attribute.constraints.foreignKey.reference})`);
           }
-
-          // Join the constraints with commas and enclose in brackets if there are any
+          
           const constraintsStr = constraints.length > 0 ? ` (${constraints.join(", ")})` : "";
 
           return (

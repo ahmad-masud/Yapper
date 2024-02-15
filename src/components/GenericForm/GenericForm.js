@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './GenericForm.css'; // Assuming this contains the modal and form styling you described
+import './GenericForm.css';
 
 function GenericForm({ onSubmit, onCancel, placeholder, initialValue = '' }) {
   const [inputValue, setInputValue] = useState(initialValue);
@@ -7,7 +7,7 @@ function GenericForm({ onSubmit, onCancel, placeholder, initialValue = '' }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(inputValue);
-    onCancel(); // Close the form after submitting
+    onCancel();
   };
 
   return (

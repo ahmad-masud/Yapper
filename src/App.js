@@ -1,6 +1,6 @@
 import './App.css';
 import Header from './components/Header/Header.js';
-import Content from './components/Content/Content.js'; // Make sure this component can accept and use props
+import Content from './components/Content/Content.js';
 import { useState, useEffect } from 'react';
 import GenericForm from './components/GenericForm/GenericForm.js';
 import Prompt from './components/Prompt/Prompt.js';
@@ -8,14 +8,14 @@ import Prompt from './components/Prompt/Prompt.js';
 function App() {
   const [tables, setTables] = useState([]);
   const [databaseName, setDatabaseName] = useState('');
-  const [showForm, setShowForm] = useState(false); // State to control form visibility
-  const [formAction, setFormAction] = useState(''); // State to determine form action (addTable or editDatabaseName)
+  const [showForm, setShowForm] = useState(false);
+  const [formAction, setFormAction] = useState('');
   const [showPrompt, setShowPrompt] = useState(false);
-  const [promptQuestion, setPromptQuestion] = useState('');
+  const [promptText, setPromptText] = useState('');
+  const [promptAction, setPromptAction] = useState('');
   const [firstLoad, setFirstLoad] = useState(false);
 
   useEffect(() => {
-    // Attempt to load the saved state from local storage
     const savedState = localStorage.getItem('dbSchemaConstructorState');
     if (savedState) {
       const { databaseName: loadedDatabaseName, tables: loadedTables } = JSON.parse(savedState);
@@ -23,11 +23,11 @@ function App() {
       setTables(loadedTables);
     }
     setFirstLoad(true);
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, []);
 
   useEffect(() => {
     if (firstLoad) {
-      if (tables.length > 0 || databaseName !== "") { // Consider more nuanced conditions based on your app's logic
+      if (tables.length > 0 || databaseName !== "") {
         const appState = { databaseName, tables };
         localStorage.setItem('dbSchemaConstructorState', JSON.stringify(appState));
       } else {
@@ -45,7 +45,6 @@ function App() {
       const foreignKeys = [];
   
       table.attributes.forEach(attr => {
-        // Construct the SQL line for each attribute
         let attrSql = `  \`${attr.name}\` ${attr.type}`;
         if (attr.length) {
           attrSql += `(${attr.length})`;
@@ -71,12 +70,10 @@ function App() {
         attributeDefinitions.push(attrSql);
       });
   
-      // Concatenate primary key parts if any
       if (primaryKeyParts.length > 0) {
         attributeDefinitions.push(`  PRIMARY KEY (${primaryKeyParts.join(', ')})`);
       }
   
-      // Concatenate all attribute definitions and foreign keys
       sql += [...attributeDefinitions, ...foreignKeys].join(",\n") + '\n';
   
       sql += `);\n\n`;
@@ -90,7 +87,7 @@ function App() {
     
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${databaseName}.sql`; // Use the database name in the filename
+    a.download = `${databaseName}.sql`;
     document.body.appendChild(a);
     a.click();
     
@@ -105,12 +102,13 @@ function App() {
 
   const handleFormSubmit = (inputValue) => {
     if (formAction === 'addTable') {
-      // Check if the table name already exists
-      const nameExists = tables.some(table => table.name === inputValue);
+      const nameExists = tables.some(table => table.name.toLowerCase() === inputValue.toLowerCase());
       if (nameExists) {
-        alert('A table with this name already exists.'); // Notify the user
+        setShowForm(false);
+        setPromptText("A table with this name already exists.");
+        setPromptAction('alert');
+        setShowPrompt(true);
       } else {
-        // Proceed to add the new table if the name doesn't exist
         const newTable = {
           id: tables.length + 1,
           name: inputValue,
@@ -124,32 +122,35 @@ function App() {
     } else if (formAction === 'editDatabaseName') {
       setDatabaseName(inputValue);
     }
-    setShowForm(false); // Close the form after submission or if the table name exists
+    setShowForm(false);
   };
 
-  // Function to show the form for adding a table
   const showAddTableForm = () => {
     setFormAction('addTable');
     setShowForm(true);
   };
 
-  // Function to show the form for editing the database name
   const showEditDatabaseNameForm = () => {
     setFormAction('editDatabaseName');
     setShowForm(true);
   };
 
   const handleDeleteDatabase = () => {
-    setPromptQuestion("Are you sure you want to delete the entire database?");
+    setPromptText("Are you sure you want to delete the entire database?");
+    setPromptAction('deleteDatabase');
     setShowPrompt(true);
   };
 
   const handleConfirm = () => {
-    localStorage.removeItem('dbSchemaConstructorState');
-    setDatabaseName('');
-    setTables([]);
-    setShowPrompt(false);
-    showEditDatabaseNameForm();
+    if (promptAction === 'deleteDatabase') {
+      localStorage.removeItem('dbSchemaConstructorState');
+      setDatabaseName('');
+      setTables([]);
+      setShowPrompt(false);
+      showEditDatabaseNameForm();
+    } else if (promptAction === 'alert') {
+      setShowPrompt(false);
+    }
   };
   
   const handleCancel = () => {
@@ -181,24 +182,23 @@ function App() {
   const onAddAttribute = (tableId, attributeDetails) => {
     setTables(currentTables => currentTables.map(table => {
       if (table.id === tableId) {
-        // Check if the attribute name already exists in this table
         const attributeNameExists = table.attributes.some(attribute => 
           attribute.name.toLowerCase() === attributeDetails.name.toLowerCase()
         );
   
         if (attributeNameExists) {
-          // Optionally alert the user or handle this case as needed
-          alert("Attribute name already exists in this table. Please choose a different name.");
-          return table; // Return the table unchanged if the attribute name exists
+          setPromptText("Attribute name already exists in this table. Please choose a different name.");
+          setPromptAction('alert');
+          setShowPrompt(true);
+          return table;
         }
   
-        // If the attribute name does not exist, add the new attribute
         return {
           ...table,
           attributes: [...table.attributes, attributeDetails]
         };
       }
-      return table; // Return all other tables unchanged
+      return table;
     }));
   };
   
@@ -213,7 +213,7 @@ function App() {
 
   function handleSaveDatabase() {
     const databaseState = { databaseName, tables };
-    const databaseStateStr = JSON.stringify(databaseState, null, 2); // Beautify the JSON string
+    const databaseStateStr = JSON.stringify(databaseState, null, 2);
     const blob = new Blob([databaseStateStr], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
 
@@ -230,7 +230,9 @@ function App() {
   const handleOpenDatabase = (event) => {
     const file = event.target.files[0];
     if (!file) {
-        alert("No File.");
+        setPromptText("No File.");
+        setPromptAction('alert');
+        setShowPrompt(true);
         return;
     }
 
@@ -255,11 +257,15 @@ function App() {
                 setTables(adjustedTables);
                 window.location.reload();
             } else {
-                alert("Invalid file format.");
+              setPromptText("Invalid file format.");
+              setPromptAction('alert');
+              setShowPrompt(true);
             }
         } catch (error) {
             console.error("Error parsing the file:", error);
-            alert("An error occurred while reading the file.");
+            setPromptText("An error occurred while reading the file.");
+            setPromptAction('alert');
+            setShowPrompt(true);
         }
     };
     reader.readAsText(file);
@@ -268,9 +274,9 @@ function App() {
   return (
     <div className="App">
       <Header
-        onAddTable={showAddTableForm} // Updated to show form
+        onAddTable={showAddTableForm}
         onDeleteDatabase={handleDeleteDatabase}
-        onEditDatabaseName={showEditDatabaseNameForm} // Updated to show form
+        onEditDatabaseName={showEditDatabaseNameForm}
         onDownloadDatabase={handleDownloadDatabase}
         databaseName={databaseName}
         onSaveDatabase={handleSaveDatabase}
@@ -278,7 +284,7 @@ function App() {
       />
       {showPrompt && (
         <Prompt
-          question={promptQuestion}
+          question={promptText}
           onConfirm={handleConfirm}
           onCancel={handleCancel}
         />
@@ -294,7 +300,7 @@ function App() {
       <Content
         tables={tables}
         allTableNames={tables.map(t => t.name)}
-        onDeleteTable={handleDeleteTable} // Passing the new handler to Content
+        onDeleteTable={handleDeleteTable}
         onUpdateTable={handleUpdateTable}
         onAddAttribute={onAddAttribute}
         onDeleteAttribute={onDeleteAttribute}

@@ -10,7 +10,7 @@ function AttributeForm({ onCancel, onSubmit }) {
   const [attributeUnique, setAttributeUnique] = useState(false);
   const [attributePrimaryKey, setAttributePrimaryKey] = useState(false);
   const [attributeAutoIncrement, setAttributeAutoIncrement] = useState(false);
-  const [foreignKeyReference, setForeignKeyReference] = useState(''); // State for foreign key reference
+  const [foreignKeyReference, setForeignKeyReference] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,11 +24,10 @@ function AttributeForm({ onCancel, onSubmit }) {
         unique: attributeUnique,
         primaryKey: attributePrimaryKey,
         autoIncrement: attributeAutoIncrement,
-        foreignKey: foreignKeyReference ? { reference: foreignKeyReference } : undefined, // Include foreign key info if provided
+        foreignKey: foreignKeyReference ? { reference: foreignKeyReference } : undefined,
       },
     });
 
-    // Reset form
     resetForm();
   };
 

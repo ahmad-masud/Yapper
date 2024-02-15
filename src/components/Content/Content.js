@@ -1,5 +1,5 @@
 import './Content.css';
-import Table from '../Table/Table.js'; // Adjust the import path as necessary
+import Table from '../Table/Table.js';
 
 function Content({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAttribute, onDeleteAttribute, onUpdatePosition }) {
     return (
@@ -8,7 +8,7 @@ function Content({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAtt
                 <Table
                     key={table.id}
                     table={table}
-                    onDeleteTable={onDeleteTable} // Pass the function to each Table
+                    onDeleteTable={onDeleteTable}
                     onUpdateTable={onUpdateTable}
                     allTableNames={allTableNames}
                     onAddAttribute={onAddAttribute}
