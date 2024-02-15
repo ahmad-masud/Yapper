@@ -4,7 +4,7 @@
     {
       "id": 1,
       "name": "Student",
-      "color": "CornFlowerBlue",
+      "color": "SteelBlue",
       "positionX": 57,
       "positionY": 97,
       "attributes": [
@@ -51,7 +51,7 @@
     {
       "id": 2,
       "name": "Teacher",
-      "color": "MediumSeaGreen",
+      "color": "DarkSeaGreen",
       "positionX": 459,
       "positionY": 140,
       "attributes": [
@@ -92,7 +92,7 @@
     {
       "id": 3,
       "name": "Class",
-      "color": "Crimson",
+      "color": "LightCoral",
       "positionX": 78,
       "positionY": 378,
       "attributes": [
@@ -127,7 +127,7 @@
     {
       "id": 4,
       "name": "Enrollment",
-      "color": "DarkViolet",
+      "color": "MediumPurple",
       "positionX": 459,
       "positionY": 378,
       "attributes": [

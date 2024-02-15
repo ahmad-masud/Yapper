@@ -96,7 +96,7 @@ function App() {
   }
   
   const randomColor = () => {
-    const colors = ["Crimson", "MediumSeaGreen", "CornFlowerBlue", "DarkViolet", "Orange"];
+    const colors = ["LightCoral", "DarkSeaGreen", "SteelBlue", "MediumPurple", "BurlyWood"];
     return colors[tables.length % colors.length];
   };
 
