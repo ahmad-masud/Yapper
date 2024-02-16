@@ -36,8 +36,9 @@ function Content({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAtt
 
         return () => {
           jsPlumbRef.current.deleteEveryConnection();
+          jsPlumb.reset();
         };
-      }, [tables]); 
+    }, [tables]); 
 
     return (
         <div ref={jsPlumbContainerRef}>

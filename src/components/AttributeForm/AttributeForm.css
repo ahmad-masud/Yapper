@@ -96,3 +96,8 @@
 .form-container .cancel-button:hover {
     background-color: #ccc;
 }
+
+input:disabled,
+select:disabled {
+    cursor: not-allowed;
+}

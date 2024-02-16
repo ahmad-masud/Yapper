@@ -10,7 +10,10 @@ function Header({ onAddTable, onDeleteDatabase, onEditDatabaseName, onDownloadDa
             <div className='header'>
                 <div className='header-title'>
                     <i className="header-title-logo fa-solid fa-database"></i>
-                    <span className='header-title-text'>{databaseName}</span>
+                    <span className='header-title-text'>DBSC</span>
+                </div>
+                <div className='database-title'>
+                    <span className='database-title-text'>{databaseName}</span>
                     <button aria-label='rename-schema' data-tooltip-id="rename-schema" className='header-button' onClick={onEditDatabaseName}><i className="fa-solid fa-pen-to-square"></i></button>
                 </div>
                 <div className='header-buttons'>

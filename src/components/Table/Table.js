@@ -14,6 +14,12 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
   const [promptText, setPromptText] = useState('');
   const [promptAction, setPromptAction] = useState('');
   const tableRef = useRef(null);
+  const colors = {
+    "red": "FireBrick", 
+    "green": "LightSeaGreen", 
+    "blue": "SteelBlue", 
+    "purple": "DarkOrchid",
+  };
   
   const handleUpdatePosition = useCallback((newX, newY) => {
     onUpdatePosition(table.id, newX, newY);
@@ -146,7 +152,7 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
         className="table-container"
         ref={tableRef}
       >
-        <div className="table-header" style={{background: color}}>
+        <div className="table-header" style={{background: colors[color]}}>
           <h2 className='table-name'>{table.name}</h2>
           <div className='tabler-header-buttons'>
             <button aria-label='add attribute' className='table-header-button' onClick={() => setIsAttributeFormVisible(true)}><i className="fa-solid fa-plus"></i></button>

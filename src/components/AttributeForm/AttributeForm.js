@@ -14,6 +14,7 @@ function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
   const [foreignKeyAttribute, setForeignKeyAttribute] = useState('');
   const [isForeignKey, setIsForeignKey] = useState(false);
   const [attributeValues, setAttributeValues] = useState('');
+  const [attributeComment, setAttributeComment] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,6 +23,7 @@ function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
       type: attributeType,
       length: attributeLength,
       defaultValue: attributeDefaultValue,
+      comment: attributeComment,
       values: attributeValues,
       constraints: {
         notNull: attributeNotNull,
@@ -117,21 +119,26 @@ function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
                   value={attributeDefaultValue}
                   onChange={(e) => setAttributeDefaultValue(e.target.value)}
                 />
+                <input
+                  type="text"
+                  placeholder="Comment"
+                  value={attributeComment}
+                  onChange={(e) => setAttributeComment(e.target.value)}
+                />
                 <select
                   disabled={!isForeignKey}
                   value={foreignKeyTable && foreignKeyAttribute ? [foreignKeyTable, foreignKeyAttribute].join(',') : ''}
                   onChange={handleChangeForeignKey}
                 >
                   <option value="">None</option>
-                  {tables.filter(table => table.name !== thisTable.name) // Compare by name or another identifier
-                    .flatMap(table => 
-                      table.attributes
-                        .filter(attribute => attribute.constraints.primaryKey)
-                        .map(attribute => (
-                          <option key={`${table.name}-${attribute.name}`} value={`${table.name},${attribute.name}`}>
-                            {`${table.name}, ${attribute.name}`}
-                          </option>
-                        ))
+                  {tables.flatMap(table => 
+                    table.attributes
+                      .filter(attribute => attribute.constraints.primaryKey)
+                      .map(attribute => (
+                        <option key={`${table.name}-${attribute.name}`} value={`${table.name},${attribute.name}`}>
+                          {`${table.name}, ${attribute.name}`}
+                        </option>
+                      ))
                     )
                   }
                 </select>

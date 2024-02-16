@@ -39,19 +39,19 @@ function App() {
   function generateSqlQuery(databaseName, tables) {
     let sql = `CREATE DATABASE IF NOT EXISTS \`${databaseName}\`;\nUSE \`${databaseName}\`;\n\n`;
     let foreignKeyStatements = [];
-
+  
     tables.forEach(table => {
         sql += `CREATE TABLE IF NOT EXISTS \`${table.name}\` (\n`;
         const attributeDefinitions = [];
         const primaryKeyParts = [];
-
+  
         table.attributes.forEach(attr => {
             let attrSql = `  \`${attr.name}\` ${attr.type}`;
             if (attr.length) {
                 attrSql += `(${attr.length})`;
             }
             if (attr.values) {
-                attrSql += ` ENUM(${attr.values.join(', ')})`;
+                attrSql += ` ENUM(${attr.values.map(value => `'${value}'`).join(', ')})`;
             }
             if (attr.constraints.notNull) {
                 attrSql += ` NOT NULL`;
@@ -68,16 +68,19 @@ function App() {
             if (attr.defaultValue) {
                 attrSql += ` DEFAULT '${attr.defaultValue}'`;
             }
-
+            if (attr.comment) {
+                attrSql += ` COMMENT '${attr.comment}'`;
+            }
+  
             attributeDefinitions.push(attrSql);
         });
-
+  
         if (primaryKeyParts.length > 0) {
             attributeDefinitions.push(`  PRIMARY KEY (${primaryKeyParts.join(', ')})`);
         }
-
+  
         sql += [...attributeDefinitions].join(",\n") + '\n);\n\n';
-
+  
         // Prepare FOREIGN KEY statements for later
         table.attributes.forEach(attr => {
             if (attr.constraints.foreignKey && attr.constraints.foreignKey.table && attr.constraints.foreignKey.attribute) {
@@ -86,14 +89,13 @@ function App() {
             }
         });
     });
-
+  
     // Append all foreign key statements after table creation
     sql += foreignKeyStatements.join("\n");
-
-    return sql;
-  }
-
   
+    return sql;
+  }  
+
   function downloadSqlQuery(sql) {
     const blob = new Blob([sql], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
@@ -109,7 +111,7 @@ function App() {
   }
   
   const randomColor = () => {
-    const colors = ["LightCoral", "DarkSeaGreen", "SteelBlue", "MediumPurple", "BurlyWood"];
+    const colors = ["red", "green", "blue", "purple"];
     return colors[tables.length % colors.length];
   };
 
@@ -128,7 +130,19 @@ function App() {
           color: randomColor(),
           positionX: ((tables.length)*20),
           positionY: ((tables.length)*20 + 50),
-          attributes: [],
+          attributes: [{
+            "name": "createdAt",
+            "type": "TIMESTAMP",
+            "length": "",
+            "defaultValue": "",
+            "values": "",
+            "constraints": {
+              "notNull": false,
+              "unique": false,
+              "primaryKey": false,
+              "autoIncrement": true
+            }
+          }],
         };
         setTables([...tables, newTable]);
       }
