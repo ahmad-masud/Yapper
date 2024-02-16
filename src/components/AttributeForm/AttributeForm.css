@@ -37,11 +37,13 @@
 }
 
 .form-container select {
-    padding: 10px 5px;
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1em;
     outline: none;
+    appearance: none;
+    -webkit-appearance: none;
 }
 
 .form-container input[type="checkbox"] {
