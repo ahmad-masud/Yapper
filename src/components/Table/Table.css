@@ -5,7 +5,7 @@
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
     overflow: hidden;
-    min-height: 100px;
+    min-height: 80px;
     min-width: 200px;
     cursor: move;
     z-index: 100;

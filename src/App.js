@@ -182,12 +182,6 @@ function App() {
     ));
   };  
 
-  const handleUpdateWidth = (tableId, newWidth) => {
-    setTables(prevTables => prevTables.map(table => 
-      table.id === tableId ? { ...table, width: newWidth } : table
-    ));
-  };  
-
   const onAddAttribute = (tableId, attributeDetails) => {
     setTables(currentTables => currentTables.map(table => {
       if (table.id === tableId) {
@@ -314,7 +308,6 @@ function App() {
         onAddAttribute={onAddAttribute}
         onDeleteAttribute={onDeleteAttribute}
         onUpdatePosition={handleUpdatePosition}
-        onUpdateWidth={handleUpdateWidth}
       />
     </div>
   );
