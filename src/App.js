@@ -84,7 +84,7 @@ function App() {
         // Prepare FOREIGN KEY statements for later
         table.attributes.forEach(attr => {
             if (attr.constraints.foreignKey && attr.constraints.foreignKey.table && attr.constraints.foreignKey.attribute) {
-                const fkStatement = `ALTER TABLE \`${table.name}\` ADD CONSTRAINT fk_${table.name}_${attr.name} FOREIGN KEY (\`${attr.name}\`) REFERENCES \`${attr.constraints.foreignKey.table}\`(\`${attr.constraints.foreignKey.attribute}\`);\n`;
+                const fkStatement = `ALTER TABLE \`${table.name}\` ADD CONSTRAINT ${attr.name} FOREIGN KEY (\`${attr.name}\`) REFERENCES \`${attr.constraints.foreignKey.table}\`(\`${attr.constraints.foreignKey.attribute}\`);\n`;
                 foreignKeyStatements.push(fkStatement);
             }
         });
