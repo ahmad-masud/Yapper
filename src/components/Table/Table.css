@@ -52,17 +52,23 @@
     border: none;
 }
 
+.attribute-left {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    margin-left: 5px;
+}
+
 .attribute-action-button {
     font-size: 1em;
     color: black;
     border: none;
     cursor: pointer;
     background: none;
-    margin-left: 10px;
 }
 
-.italic {
-    font-style: italic;
+.fa-key, .fa-share-nodes {
+    color: #7f8c8d;
 }
 
 @media screen and (max-width: 600px) {

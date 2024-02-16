@@ -157,15 +157,13 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
         <ul className='attribute-list'>
         {table.attributes.map((attribute, index) => {
           return (
-            <li id={`${table.name}-${attribute.name}`}className='attribute' key={index}> 
-              <div>
-                <span>
-                  {attribute.name}
-                  {attribute.constraints.primaryKey && <sup className='italic'>PK</sup>}
-                  {attribute.constraints.foreignKey && <sup className='italic'>FK</sup>}
-                </span>
-                <sub className="italic">{` (${attribute.type.toLowerCase()})`}</sub></div>
-              <button aria-label='delete attribute' onClick={() => handleDeleteAttribute(index)} className="attribute-action-button"><i className="fa-solid fa-xmark"></i></button>
+            <li id={`${table.name}-${attribute.name}`}className='attribute' key={index}>    
+              <div>{attribute.name} <sub className="italic">{`(${attribute.type.toLowerCase()})`}</sub></div>
+              <div className='attribute-left'>
+                {attribute.constraints.foreignKey && <i className="fa-solid fa-share-nodes"></i>}
+                {attribute.constraints.primaryKey && <i className="fa-solid fa-key"></i>}
+                <button aria-label='delete attribute' onClick={() => handleDeleteAttribute(index)} className="attribute-action-button"><i className="fa-solid fa-xmark"></i></button>
+              </div>
             </li>
           );
         })}
