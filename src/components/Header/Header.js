@@ -20,6 +20,7 @@ function Header({ onAddTable, onDeleteDatabase, onEditDatabaseName, onDownloadDa
                     <button aria-label='open-schema' data-tooltip-id="open-schema" className='header-button'  onClick={() => fileInputRef.current.click()}><i className="fa-solid fa-folder-open"></i></button>
                     <button aria-label='download-schema' data-tooltip-id="download-schema" className='header-button' onClick={onDownloadDatabase}><i className="fa-solid fa-download"></i></button>
                     <button aria-label='delete-schema' data-tooltip-id="delete-schema" className='header-button' onClick={onDeleteDatabase}><i className="fa-solid fa-trash-can"></i></button>
+                    <a target="_blank" rel="noreferrer" href='https://github.com/ahmad-masud/Database-Schema-Constructor' aria-label='github' data-tooltip-id="github" className='header-button'><i className="fa-brands fa-github"></i></a>
                 </div>                
             </div>
             <Tooltip id="rename-schema" place="bottom" variant="info" content="Rename Schema"/>
@@ -28,6 +29,7 @@ function Header({ onAddTable, onDeleteDatabase, onEditDatabaseName, onDownloadDa
             <Tooltip id="open-schema" place="bottom" variant="info" content="Open Schema"/>
             <Tooltip id="download-schema" place="bottom" variant="info" content="Export as SQL Query"/>
             <Tooltip id="delete-schema" place="bottom" variant="info" content="Delete Schema"/>
+            <Tooltip id="github" place="bottom" variant="info" content="Github Repo"/>
         </div>
     );
 }
