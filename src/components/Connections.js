@@ -18,7 +18,7 @@ function Connections({ onUpdatePosition, connections, children }) {
                     overlays: [
                         ['Arrow', { location: 1, width: 12, length: 12 }]
                     ],
-                    endpoints: [['Dot', { radius: 6 }], 'Blank'],
+                    endpoints: [['Dot', { radius: 8 }], 'Blank'],
                     paintStyle: { stroke: '#7f8c8d', strokeWidth: 2 },
                     endpointStyle: { fillStyle: '#7f8c8d' },
                     anchor: ['Continuous', { faces: ['left', 'right'] }],
