@@ -16,7 +16,7 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
   const tableRef = useRef(null);
   const colors = {
     "red": "FireBrick", 
-    "green": "LightSeaGreen", 
+    "green": "#16A085", 
     "blue": "SteelBlue", 
     "purple": "DarkOrchid",
   };
@@ -148,11 +148,11 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
       <div 
         style= {window.innerWidth >= 600 ? { left: `${position.x}px`, top: `${position.y}px`, position: 'absolute' } : {}}
         onMouseDown={onMouseDown}
-        className="table-container"
+        className={`table-container ${isDragging ? 'dragging' : ''}`}
         ref={tableRef}
       >
         <div className="table-header" style={{background: colors[color]}}>
-          <h2 className='table-name'>{table.name}</h2>
+          <p className='table-name'>{table.name}</p>
           <div className='tabler-header-buttons'>
             <button aria-label='add attribute' className='table-header-button' onClick={() => setIsAttributeFormVisible(true)}><i className="fa-solid fa-plus"></i></button>
             <button aria-label='edit table' className='table-header-button' onClick={handleEditTableDetails}><i className="bi bi-pencil-fill"></i></button>

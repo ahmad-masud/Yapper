@@ -10,7 +10,11 @@
     cursor: move;
     z-index: 100;
 }
-  
+
+.dragging {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+}
+
 .table-header {
     background-color: var(--accent-color); /* Accent color for the header */
     display: flex;
@@ -24,6 +28,7 @@
     font-size: 1em; /* Large text for the table name */
     color: white; /* Dark text for contrast */
     background: none;
+    font-weight: 600;
 }
 
 .tabler-header-buttons {
