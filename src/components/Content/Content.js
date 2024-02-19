@@ -3,8 +3,8 @@ import './Content.css';
 import Table from '../Table/Table.js';
 import { jsPlumb } from 'jsplumb';
 
-function Content({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAttribute, onDeleteAttribute, onUpdatePosition }) {
-    
+function Content({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAttribute, onDeleteAttribute, onUpdatePosition, connections }) {
+
     const jsPlumbRef = useRef(null);
     const jsPlumbContainerRef = useRef(null);
 
@@ -12,33 +12,29 @@ function Content({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAtt
         jsPlumbRef.current = jsPlumb.getInstance();
         jsPlumbRef.current.setContainer(jsPlumbContainerRef.current);
 
-        tables.forEach((table) => {
-            table.attributes.forEach((attribute) => {
-                if (attribute.constraints.foreignKey) {
-                    const sourceId = `${table.name}-${attribute.name}`;
-                    const targetId = `${attribute.constraints.foreignKey.table}-${attribute.constraints.foreignKey.attribute}`;
-                    if (document.getElementById(sourceId) && document.getElementById(targetId) && window.innerWidth >= 600) {
-                        jsPlumbRef.current.connect({
-                            source: sourceId,
-                            target: targetId,
-                            connector: ["Flowchart", { stub: [30, 30], cornerRadius: 5 }],
-                            overlays: [
-                                ['Arrow', { location: 1, width: 12, length: 12 }]
-                            ],
-                            endpoints: [['Dot', { radius: 6 }], 'Blank'],
-                            paintStyle: { stroke: '#7f8c8d', strokeWidth: 2 },
-                            endpointStyle: { fillStyle: '#7f8c8d' },
-                            anchor: ['Continuous', { faces: ['left', 'right'] }],
-                        });
-                    }
-                }
-            });
+        connections.forEach((connection) => {
+            const sourceId = connection.source
+            const targetId = connection.target;
+            if (document.getElementById(sourceId) && document.getElementById(targetId) && window.innerWidth >= 600) {
+                jsPlumbRef.current.connect({
+                    source: sourceId,
+                    target: targetId,
+                    connector: ["Flowchart", { stub: [30, 30], cornerRadius: 5 }],
+                    overlays: [
+                        ['Arrow', { location: 1, width: 12, length: 12 }]
+                    ],
+                    endpoints: [['Dot', { radius: 6 }], 'Blank'],
+                    paintStyle: { stroke: '#7f8c8d', strokeWidth: 2 },
+                    endpointStyle: { fillStyle: '#7f8c8d' },
+                    anchor: ['Continuous', { faces: ['left', 'right'] }],
+                });
+            }
         }); 
 
         return () => {
           jsPlumbRef.current.deleteEveryConnection();
         };
-    }, [tables]); 
+    }, [onUpdatePosition, connections]); 
 
     return (
         <div ref={jsPlumbContainerRef}>

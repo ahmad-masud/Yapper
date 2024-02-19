@@ -14,27 +14,29 @@ function App() {
   const [promptText, setPromptText] = useState('');
   const [promptAction, setPromptAction] = useState('');
   const [firstLoad, setFirstLoad] = useState(false);
+  const [connections, setConnections] = useState([]);
 
   useEffect(() => {
     const savedState = localStorage.getItem('dbSchemaConstructorState');
     if (savedState) {
-      const { databaseName: loadedDatabaseName, tables: loadedTables } = JSON.parse(savedState);
+      const { databaseName: loadedDatabaseName, tables: loadedTables, connections: loadedConnections } = JSON.parse(savedState);
       setDatabaseName(loadedDatabaseName);
       setTables(loadedTables);
+      setConnections(loadedConnections);
     }
     setFirstLoad(true);
   }, []);
 
   useEffect(() => {
     if (firstLoad) {
-      if (tables.length > 0 || databaseName !== "") {
-        const appState = { databaseName, tables };
+      if (tables.length > 0 || databaseName !== "" || connections.length > 0) {
+        const appState = { databaseName, tables, connections };
         localStorage.setItem('dbSchemaConstructorState', JSON.stringify(appState));
       } else {
         showEditDatabaseNameForm(); 
       }
     }
-  }, [databaseName, tables, firstLoad]);
+  }, [databaseName, tables, connections, firstLoad]);
 
   function generateSqlQuery(databaseName, tables) {
     let sql = `CREATE DATABASE IF NOT EXISTS \`${databaseName}\`;\nUSE \`${databaseName}\`;\n\n`;
@@ -220,6 +222,13 @@ function App() {
           setShowPrompt(true);
           return table;
         }
+
+        if (attributeDetails.constraints.foreignKey) {
+          const sourceId = `${table.name}-${attributeDetails.name}`;
+          const targetId = `${attributeDetails.constraints.foreignKey.table}-${attributeDetails.constraints.foreignKey.attribute}`;
+          const newConnection = { source: sourceId, target: targetId };
+          setConnections(connections => [...connections, newConnection]);
+        }
   
         return {
           ...table,
@@ -230,17 +239,33 @@ function App() {
     }));
   };
   
-  const onDeleteAttribute = (tableId, newAttributes) => {
+  const onDeleteAttribute = (tableId, attributeIndex) => {
     setTables(tables => tables.map(table => {
       if (table.id === tableId) {
-        return { ...table, attributes: newAttributes };
+
+        if (table.attributes[attributeIndex].constraints.foreignKey) {
+          const sourceId = `${table.name}-${table.attributes[attributeIndex].name}`;
+          const updatedConnections = connections.filter(connection => 
+            connection.source !== sourceId
+          );
+          setConnections(updatedConnections);
+        } else if (table.attributes[attributeIndex].constraints.primaryKey) {
+          const targetId = `${table.name}-${table.attributes[attributeIndex].name}`;
+          const updatedConnections = connections.filter(connection => 
+            connection.target !== targetId
+          );
+          setConnections(updatedConnections);
+        }
+
+        const updatedAttributes = table.attributes.filter((_, index) => index !== attributeIndex);
+        return { ...table, attributes: updatedAttributes };
       }
       return table;
     }));
   };  
 
   function handleSaveDatabase() {
-    const databaseState = { databaseName, tables };
+    const databaseState = { databaseName, tables, connections };
     const databaseStateStr = JSON.stringify(databaseState, null, 2);
     const blob = new Blob([databaseStateStr], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
@@ -269,7 +294,7 @@ function App() {
         const content = e.target.result;
         try {
             const databaseState = JSON.parse(content);
-            if (databaseState.databaseName || databaseState.tables) {
+            if (databaseState.databaseName || databaseState.tables || databaseState.connections) {
               const adjustedTables = databaseState.tables.map(table => {
                 let { positionX, positionY } = table;
 
@@ -283,6 +308,7 @@ function App() {
               });
                 setDatabaseName(databaseState.databaseName);
                 setTables(adjustedTables);
+                setConnections(databaseState.connections);
                 window.location.reload();
             } else {
               setPromptText("Invalid file format.");
@@ -338,6 +364,7 @@ function App() {
         onAddAttribute={onAddAttribute}
         onDeleteAttribute={onDeleteAttribute}
         onUpdatePosition={handleUpdatePosition}
+        connections={connections}
       />
     </div>
   );

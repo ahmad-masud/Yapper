@@ -104,8 +104,7 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
   };
 
   const handleDeleteAttribute = (attributeIndex) => {
-    const updatedAttributes = table.attributes.filter((_, index) => index !== attributeIndex);
-    onDeleteAttribute(table.id, updatedAttributes);
+    onDeleteAttribute(table.id, attributeIndex);
   };
 
   const handleConfirm = () => {
