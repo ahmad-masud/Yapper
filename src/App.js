@@ -140,7 +140,8 @@ function App() {
               "notNull": false,
               "unique": false,
               "primaryKey": false,
-              "autoIncrement": true
+              "autoIncrement": true,
+              "foreignKey": {}
             }
           }],
         };
@@ -319,7 +320,12 @@ function App() {
       {showForm && (
         <GenericForm
           onSubmit={handleFormSubmit}
-          onCancel={() => setShowForm(false)}
+          onCancel={() => {
+            if (databaseName === "") {
+              setDatabaseName('Untitled');
+            }
+            setShowForm(false)
+          }}
           placeholder={formAction === 'addTable' ? "Enter table name:" : "Enter new database name:"}
           initialValue={formAction === 'editDatabaseName' ? databaseName : ""}
         />

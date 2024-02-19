@@ -5,7 +5,7 @@
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
     overflow: hidden;
-    min-height: 80px;
+    min-height: 35px;
     min-width: 200px;
     cursor: move;
     z-index: 100;
@@ -16,12 +16,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    height: 35px;
+    padding: 0 10px;
 }
   
 .table-name {
     font-size: 1em; /* Large text for the table name */
     color: white; /* Dark text for contrast */
+    background: none;
 }
 
 .tabler-header-buttons {
@@ -45,7 +47,9 @@
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid black; 
-    padding: 10px;
+    height: 35px;
+    padding: 0 10px;
+    align-items: center;
 }
 
 .attribute-list .attribute:last-child {
@@ -79,4 +83,8 @@
     .table-container {
         cursor: default;
     }  
+}
+
+.bi-plus, .bi-x {
+    font-size: 1.5em;
 }

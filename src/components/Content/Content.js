@@ -4,6 +4,7 @@ import Table from '../Table/Table.js';
 import { jsPlumb } from 'jsplumb';
 
 function Content({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAttribute, onDeleteAttribute, onUpdatePosition }) {
+    
     const jsPlumbRef = useRef(null);
     const jsPlumbContainerRef = useRef(null);
 
@@ -14,29 +15,28 @@ function Content({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAtt
         tables.forEach((table) => {
             table.attributes.forEach((attribute) => {
                 if (attribute.constraints.foreignKey) {
-                const sourceId = `${table.name}-${attribute.name}`;
-                const targetId = `${attribute.constraints.foreignKey.table}-${attribute.constraints.foreignKey.attribute}`;
-                if (document.getElementById(sourceId) && document.getElementById(targetId) && window.innerWidth >= 600) {
-                    jsPlumbRef.current.connect({
-                        source: sourceId,
-                        target: targetId,
-                        //connector: ["Flowchart", { stub: [30, 30], cornerRadius: 5 }],
-                        overlays: [
-                            ['Arrow', { location: 1, width: 12, length: 12 }]
-                        ],
-                        endpoints: [['Dot', { radius: 6 }], 'Blank'],
-                        paintStyle: { stroke: '#7f8c8d', strokeWidth: 2 },
-                        endpointStyle: { fillStyle: '#7f8c8d' },
-                        anchor: ['Continuous', { faces: ['left', 'right'] }],
-                    });
-                }
+                    const sourceId = `${table.name}-${attribute.name}`;
+                    const targetId = `${attribute.constraints.foreignKey.table}-${attribute.constraints.foreignKey.attribute}`;
+                    if (document.getElementById(sourceId) && document.getElementById(targetId) && window.innerWidth >= 600) {
+                        jsPlumbRef.current.connect({
+                            source: sourceId,
+                            target: targetId,
+                            connector: ["Flowchart", { stub: [30, 30], cornerRadius: 5 }],
+                            overlays: [
+                                ['Arrow', { location: 1, width: 12, length: 12 }]
+                            ],
+                            endpoints: [['Dot', { radius: 6 }], 'Blank'],
+                            paintStyle: { stroke: '#7f8c8d', strokeWidth: 2 },
+                            endpointStyle: { fillStyle: '#7f8c8d' },
+                            anchor: ['Continuous', { faces: ['left', 'right'] }],
+                        });
+                    }
                 }
             });
         }); 
 
         return () => {
           jsPlumbRef.current.deleteEveryConnection();
-          jsPlumb.reset();
         };
     }, [tables]); 
 

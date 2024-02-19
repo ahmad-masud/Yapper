@@ -156,7 +156,7 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
           <h2 className='table-name'>{table.name}</h2>
           <div className='tabler-header-buttons'>
             <button aria-label='add attribute' className='table-header-button' onClick={() => setIsAttributeFormVisible(true)}><i className="fa-solid fa-plus"></i></button>
-            <button aria-label='edit table' className='table-header-button' onClick={handleEditTableDetails}><i className="fa-solid fa-pen-to-square"></i></button>
+            <button aria-label='edit table' className='table-header-button' onClick={handleEditTableDetails}><i className="bi bi-pencil-fill"></i></button>
             <button aria-label='delete table' className='table-header-button' onClick={handleDelete}><i className="fa-solid fa-xmark"></i></button>
           </div>
         </div>
