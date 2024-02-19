@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
   const [attributeName, setAttributeName] = useState('');
-  const [attributeType, setAttributeType] = useState('INT');
+  const [attributeType, setAttributeType] = useState('INTEGER');
   const [attributeLength, setAttributeLength] = useState('');
   const [attributeDefaultValue, setAttributeDefaultValue] = useState('');
   const [attributeNotNull, setAttributeNotNull] = useState(false);
@@ -15,6 +15,7 @@ function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
   const [isForeignKey, setIsForeignKey] = useState(false);
   const [attributeValues, setAttributeValues] = useState('');
   const [attributeComment, setAttributeComment] = useState('');
+  const [isUnsigned, setIsUnsigned] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,7 +31,8 @@ function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
         unique: attributeUnique,
         primaryKey: attributePrimaryKey,
         autoIncrement: attributeAutoIncrement,
-        foreignKey: (foreignKeyTable && foreignKeyAttribute) ? { table: foreignKeyTable, attribute: foreignKeyAttribute } : undefined,
+        foreignKey: (foreignKeyTable && foreignKeyAttribute && isForeignKey) ? { table: foreignKeyTable, attribute: foreignKeyAttribute } : undefined,
+        unsigned: isUnsigned,
       },
     });
 
@@ -69,7 +71,20 @@ function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
                 />
                 <select
                   value={attributeType}
-                  onChange={(e) => setAttributeType(e.target.value)}
+                  onChange={
+                    (e) => {
+                      if (!['CHAR', 'VARCHAR', 'BINARY', 'VARBINARY', 'DECIMAL'].includes(e.target.value)) {
+                        setAttributeLength('');
+                      }
+                      if (!['ENUM', 'SET'].includes(e.target.value)) {
+                        setAttributeValues('');
+                      }
+                      if (!['INTEGER', 'SMALLINT', 'BIGINT'].includes(e.target.value)) {
+                        setIsUnsigned(false);
+                      }
+                      setAttributeType(e.target.value)
+                    }
+                  }
                   required
                 >
                   <option value="INTEGER">INTEGER</option>
@@ -175,8 +190,24 @@ function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
                   <input
                     type="checkbox"
                     checked={isForeignKey}
-                    onChange={(e) => setIsForeignKey(e.target.checked)}
+                    onChange={
+                      (e) => {
+                        if (!e.target.checked) {
+                          setForeignKeyTable('');
+                          setForeignKeyAttribute('');
+                        }
+                        setIsForeignKey(e.target.checked)
+                      }
+                    }
                   /> Foreign Key
+                </label>
+                <label>
+                  <input
+                    disabled={!['INTEGER', 'SMALLINT', 'BIGINT'].includes(attributeType)}
+                    type="checkbox"
+                    checked={isUnsigned}
+                    onChange={(e) => setIsUnsigned(e.target.checked)}
+                  /> Unsigned
                 </label>
                 <div className='form-buttons-container'>
                   <button className="submit-button" type="submit">Submit</button>

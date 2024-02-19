@@ -61,6 +61,9 @@ function App() {
             if (attr.constraints.unique) {
                 attrSql += ` UNIQUE`;
             }
+            if (attr.constraints.unsigned) {
+              attrSql += ` UNSIGNED`;
+            }
             if (attr.constraints.primaryKey) {
                 primaryKeyParts.push(`\`${attr.name}\``);
             }
@@ -143,7 +146,6 @@ function App() {
               "unique": false,
               "primaryKey": false,
               "autoIncrement": true,
-              "foreignKey": {}
             }
           }],
         };
@@ -346,12 +348,7 @@ function App() {
       {showForm && (
         <GenericForm
           onSubmit={handleFormSubmit}
-          onCancel={() => {
-            if (databaseName === "") {
-              setDatabaseName('Untitled');
-            }
-            setShowForm(false)
-          }}
+          onCancel={() => setShowForm(false)}
           placeholder={formAction === 'addTable' ? "Enter table name:" : "Enter new database name:"}
           initialValue={formAction === 'editDatabaseName' ? databaseName : ""}
         />
