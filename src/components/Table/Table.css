@@ -2,7 +2,7 @@
 .table-container {
     background-color: #fff; /* Background color for the table */
     border: 1px solid #ddd; /* Border around the table */
-    border-radius: 8px; /* Rounded corners */
+    border-radius: 5px; /* Rounded corners */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
     overflow: hidden;
     min-height: 35px;
@@ -12,7 +12,7 @@
 }
 
 .dragging {
-    box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+    box-shadow: 0 5px 16px rgba(0,0,0,0.25);
 }
 
 .table-header {
