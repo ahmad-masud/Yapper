@@ -148,7 +148,7 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
       <div 
         style= {window.innerWidth >= 600 ? { left: `${position.x}px`, top: `${position.y}px`, position: 'absolute' } : {}}
         onMouseDown={onMouseDown}
-        className={`table-container ${isDragging ? 'dragging' : ''}`}
+        className='table-container'
         ref={tableRef}
       >
         <div className="table-header" style={{background: colors[color]}}>
