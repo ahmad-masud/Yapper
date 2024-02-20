@@ -1,6 +1,6 @@
-import './Content.css';
-import Table from '../Table/Table.js';
-import Connections from '../Connections.js';
+import '../styles/Content.css';
+import Table from './Table.js';
+import Connections from './Connections.js';
 
 function Content({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAttribute, onDeleteAttribute, onUpdatePosition, connections }) {
     return (

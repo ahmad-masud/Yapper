@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './GenericForm.css';
+import '../styles/GenericForm.css';
 
 function GenericForm({ onSubmit, onCancel, placeholder, initialValue = '' }) {
   const [inputValue, setInputValue] = useState(initialValue);

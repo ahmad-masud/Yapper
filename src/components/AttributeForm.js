@@ -1,4 +1,4 @@
-import './AttributeForm.css';
+import '../styles/AttributeForm.css';
 import { useState } from 'react';
 
 function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
@@ -50,12 +50,15 @@ function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
     setAttributeType('INT');
     setAttributeLength('');
     setAttributeDefaultValue('');
+    setAttributeComment('');
+    setAttributeValues('');
     setAttributeNotNull(false);
     setAttributeUnique(false);
     setAttributePrimaryKey(false);
     setAttributeAutoIncrement(false);
     setForeignKeyTable('');
     setForeignKeyAttribute('');
+    setIsUnsigned(false);
   };
 
   return (

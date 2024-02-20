@@ -14,7 +14,7 @@ function Connections({ onUpdatePosition, connections, children }) {
                 jsPlumb.connect({
                     source: sourceId,
                     target: targetId,
-                    connector: ["Flowchart", { stub: [30, 40], cornerRadius: 8 }],
+                    connector: ["Flowchart", { cornerRadius: 5 }],
                     overlays: [
                         ['Arrow', { location: 1, width: 12, length: 12 }]
                     ],

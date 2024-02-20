@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Tooltip } from 'react-tooltip'
-import './Header.css';
+import '../styles/Header.css';
 
 function Header({ onAddTable, onDeleteDatabase, onEditDatabaseName, onDownloadDatabase, databaseName, onSaveDatabase, onOpenDatabase }) {
     const fileInputRef = useRef();

@@ -1,9 +1,9 @@
-import './App.css';
-import Header from './components/Header/Header.js';
-import Content from './components/Content/Content.js';
+import './styles/App.css';
+import Header from './components/Header.js';
+import Content from './components/Content.js';
 import { useState, useEffect } from 'react';
-import GenericForm from './components/GenericForm/GenericForm.js';
-import Prompt from './components/Prompt/Prompt.js';
+import GenericForm from './components/GenericForm.js';
+import Prompt from './components/Prompt.js';
 import generateSqlQuery from './utils/generateSqlQuery.js';
 import downloadSqlQuery from './utils/downloadSqlQuery.js';
 

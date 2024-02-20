@@ -1,8 +1,8 @@
-import './Table.css';
-import AttributeForm from '../AttributeForm/AttributeForm.js';
+import '../styles/Table.css';
+import AttributeForm from './AttributeForm.js';
 import { useState, useEffect, useCallback , useRef } from 'react';
-import GenericForm from '../GenericForm/GenericForm.js';
-import Prompt from '../Prompt/Prompt.js';
+import GenericForm from './GenericForm.js';
+import Prompt from './Prompt.js';
 
 function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNames, onDeleteAttribute, color, positionX, positionY, onUpdatePosition }) {
   const [isAttributeFormVisible, setIsAttributeFormVisible] = useState(false);
