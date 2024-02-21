@@ -103,6 +103,7 @@ function App() {
       localStorage.removeItem('dbSchemaConstructorState');
       setDatabaseName('');
       setTables([]);
+      setConnections([]);
       setShowPrompt(false);
       showEditDatabaseNameForm();
     } else if (promptAction === 'alert') {
