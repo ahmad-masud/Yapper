@@ -60,3 +60,9 @@
 .header-title .header-button {
     font-size: 1em;
 }
+
+.user-profile {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+}

@@ -22,6 +22,7 @@ function App() {
   const [firstLoad, setFirstLoad] = useState(false);
   const [connections, setConnections] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [userPhotoURL, setUserPhotoURL] = useState('');
   const [showModifyDatabasesForm, setShowModifyDatabasesForm] = useState(false);
   const googleProvider = new GoogleAuthProvider();
 
@@ -30,11 +31,14 @@ function App() {
       if (user) {
         // User is signed in, so you can get the user ID.
         setUserId(user.uid);
+        setUserPhotoURL(user.photoURL);
         console.log("User ID:", user.uid); // Use user.uid directly here
+        console.log("User photo URL:", user.photoURL);
       } else {
         // User is signed out
         console.log("No user signed in.");
         setUserId(null);
+        setUserPhotoURL('');
       }
     });
   
@@ -325,6 +329,7 @@ function App() {
         onSignInWithGoogle={handleSignInWithGoogle}    
         onSignOut={handleSignOut}    
         userId={userId}
+        userPhotoURL={userPhotoURL}
       />
       {showModifyDatabasesForm && (
         <ModifyDatabasesForm
