@@ -6,6 +6,10 @@ import GenericForm from './components/GenericForm.js';
 import Prompt from './components/Prompt.js';
 import generateSqlQuery from './utils/generateSqlQuery.js';
 import downloadSqlQuery from './utils/downloadSqlQuery.js';
+import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore"; 
+import { auth, db } from './config/firebase-config';
+import { onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import ModifyDatabasesForm from './components/ModifyDatabasesForm.js';
 
 function App() {
   const [tables, setTables] = useState([]);
@@ -17,6 +21,26 @@ function App() {
   const [promptAction, setPromptAction] = useState('');
   const [firstLoad, setFirstLoad] = useState(false);
   const [connections, setConnections] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [showModifyDatabasesForm, setShowModifyDatabasesForm] = useState(false);
+  const googleProvider = new GoogleAuthProvider();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, so you can get the user ID.
+        setUserId(user.uid);
+        console.log("User ID:", user.uid); // Use user.uid directly here
+      } else {
+        // User is signed out
+        console.log("No user signed in.");
+        setUserId(null);
+      }
+    });
+  
+    // Cleanup function to unsubscribe from the listener when the component unmounts
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const savedState = localStorage.getItem('dbSchemaConstructorState');
@@ -71,6 +95,7 @@ function App() {
               "unique": false,
               "primaryKey": false,
               "autoIncrement": true,
+              "foreignKey": {}
             }
           }],
         };
@@ -117,7 +142,7 @@ function App() {
 
   const handleDownloadDatabase = () => {
     const sql = generateSqlQuery(databaseName, tables);
-    downloadSqlQuery(sql);
+    downloadSqlQuery(sql, databaseName);
   };
 
   const handleDeleteTable = (tableId) => {
@@ -192,65 +217,71 @@ function App() {
     }));
   };  
 
-  function handleSaveDatabase() {
+  function handleSaveDatabase() { // Pass the userId as an argument
     const databaseState = { databaseName, tables, connections };
-    const databaseStateStr = JSON.stringify(databaseState, null, 2);
-    const blob = new Blob([databaseStateStr], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${databaseName}.txt`;
-    document.body.appendChild(a);
-    a.click();
-
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const userDocRef = doc(db, `users/${userId}/databases`, databaseName);
+    setDoc(userDocRef, databaseState);
   }
 
-  const handleOpenDatabase = (event) => {
-    const file = event.target.files[0];
-    if (!file) {
-        setPromptText("No File.");
-        setPromptAction('alert');
-        setShowPrompt(true);
-        return;
-    }
+  const handleModifyDatabases = async (action, databaseId) => {
+    const databaseRef = doc(db, `users/${userId}/databases`, databaseId);
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        const content = e.target.result;
-        try {
-            const databaseState = JSON.parse(content);
-            if (databaseState.databaseName || databaseState.tables || databaseState.connections) {
-              const adjustedTables = databaseState.tables.map(table => {
-                let { positionX, positionY } = table;
-
-                if (positionX > window.innerWidth - 400) {
-                  positionX = window.innerWidth - 400;
-                }
-                if (positionY > window.innerHeight - 400) {
-                  positionY = window.innerHeight - 400;
-                }
-                return { ...table, positionX, positionY };
-              });
-                setDatabaseName(databaseState.databaseName);
-                setTables(adjustedTables);
-                setConnections(databaseState.connections);
-                window.location.reload();
-            } else {
-              setPromptText("Invalid file format.");
-              setPromptAction('alert');
-              setShowPrompt(true);
-            }
-        } catch (error) {
-            console.error("Error parsing the file:", error);
-            setPromptText("An error occurred while reading the file.");
+    if (action === 'load') {
+      try {
+        const docSnap = await getDoc(databaseRef);
+        if (docSnap.exists()) {
+          const databaseState = docSnap.data();
+          if (databaseState.databaseName || databaseState.tables || databaseState.connections) {
+            const adjustedTables = databaseState.tables.map(table => {
+              let { positionX, positionY } = table;
+    
+              if (positionX > window.innerWidth - 400) {
+                positionX = window.innerWidth - 400;
+              }
+              if (positionY > window.innerHeight - 400) {
+                positionY = window.innerHeight - 400;
+              }
+              return { ...table, positionX, positionY };
+            });
+            setDatabaseName(databaseState.databaseName);
+            setTables(adjustedTables);
+            setConnections(databaseState.connections);
+            window.location.reload();
+          } else {
+            setPromptText("Invalid database format.");
             setPromptAction('alert');
             setShowPrompt(true);
+          }
+        } else {
+          setPromptText("Database does not exist.");
+          setPromptAction('alert');
+          setShowPrompt(true);
         }
-    };
-    reader.readAsText(file);
+      } catch (error) {
+        console.error("Error loading the database from Firestore:", error);
+        setPromptText("An error occurred while loading the database.");
+        setPromptAction('alert');
+        setShowPrompt(true);
+      }
+    } else if (action === 'delete') {
+      try {
+        await deleteDoc(databaseRef);
+        console.log("Document successfully deleted!");
+      } catch (error) {
+        console.error("Error removing document: ", error);
+      }
+    }
+  };
+
+  const handleSignInWithGoogle = () => {
+    signInWithPopup(auth, googleProvider)
+  };      
+
+  const handleSignOut = () => {
+    signOut(auth);
+    setPromptText("You have been signed out.");
+    setPromptAction('alert');
+    setShowPrompt(true);
   };
 
   return (
@@ -262,8 +293,21 @@ function App() {
         onDownloadDatabase={handleDownloadDatabase}
         databaseName={databaseName}
         onSaveDatabase={handleSaveDatabase}
-        onOpenDatabase={handleOpenDatabase}
+        onModifyDatabases={() => userId ? setShowModifyDatabasesForm(true) : (() => {
+          setPromptText("You must be logged in to modify databases. Please login.");
+          setPromptAction('alert');
+          setShowPrompt(true);
+        })()}
+        onSignInWithGoogle={handleSignInWithGoogle}    
+        onSignOut={handleSignOut}    
       />
+      {showModifyDatabasesForm && (
+        <ModifyDatabasesForm
+          userId={userId}
+          onSubmit={handleModifyDatabases}
+          onCancel={() => setShowModifyDatabasesForm(false)}
+        />
+      )}
       {showPrompt && (
         <Prompt
           question={promptText}

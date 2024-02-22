@@ -31,7 +31,7 @@ function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
         unique: attributeUnique,
         primaryKey: attributePrimaryKey,
         autoIncrement: attributeAutoIncrement,
-        foreignKey: (foreignKeyTable && foreignKeyAttribute && isForeignKey) ? { table: foreignKeyTable, attribute: foreignKeyAttribute } : undefined,
+        foreignKey: (foreignKeyTable && foreignKeyAttribute && isForeignKey) ? { table: foreignKeyTable, attribute: foreignKeyAttribute } : {},
         unsigned: isUnsigned,
       },
     });

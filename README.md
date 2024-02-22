@@ -12,6 +12,7 @@ The Database Schema Constructor is a web application for visually creating and m
 - **Draggable Tables**: Reorganize tables on the screen on larger screens.
 - **Responsive Design**: Ensures usability across devices.
 - **Local Storage**: Schema persistence across sessions.
+- **Cloud Storage**: Save Schemas to the cloud.
 
 ## Getting Started
 
@@ -42,6 +43,9 @@ Before you begin, ensure you have the latest version of Node.js and npm installe
 - **Editing**: Use edit icons for tables or attributes.
 - **Downloading SQL**: Use the "Download SQL" button.
 - **Clearing Schema**: Use the "Delete Database" button.
+- **Login in with Google** Use the "Login" button.
+- **Saving to the cloud with Google**: Use the "Save Database" button.
+- **Loading from the cloud with Google**: Use the "Modify Databases" button.
 
 ## Contributing
 Contributions are welcome. Please fork the project, create your feature branch, commit your changes, push to the branch, and open a pull request.
