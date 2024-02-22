@@ -218,9 +218,15 @@ function App() {
   };  
 
   function handleSaveDatabase() { // Pass the userId as an argument
-    const databaseState = { databaseName, tables, connections };
-    const userDocRef = doc(db, `users/${userId}/databases`, databaseName);
-    setDoc(userDocRef, databaseState);
+    if (userId) {
+      const databaseState = { databaseName, tables, connections };
+      const userDocRef = doc(db, `users/${userId}/databases`, databaseName);
+      setDoc(userDocRef, databaseState);
+    } else {
+      setPromptText("You must be logged in to save your database. Please login.");
+      setPromptAction('alert');
+      setShowPrompt(true);
+    }
   }
 
   const handleModifyDatabases = async (action, databaseId) => {
@@ -275,13 +281,31 @@ function App() {
 
   const handleSignInWithGoogle = () => {
     signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        setPromptText("You have been signed in.");
+        setPromptAction('alert');
+        setShowPrompt(true);
+      })
+      .catch((error) => {
+        setPromptText("An error occurred while signing in.");
+        setPromptAction('alert');
+        setShowPrompt(true);
+      });
   };      
 
   const handleSignOut = () => {
-    signOut(auth);
-    setPromptText("You have been signed out.");
-    setPromptAction('alert');
-    setShowPrompt(true);
+    signOut(auth)
+      .then((result) => {
+        setPromptText("You have been signed out.");
+        setPromptAction('alert');
+        setShowPrompt(true);
+      })
+      .catch((error) => {
+        setPromptText("An error occurred while signing out.");
+        setPromptAction('alert');
+        setShowPrompt(true);
+      });
+
   };
 
   return (
