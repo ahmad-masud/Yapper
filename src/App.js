@@ -324,6 +324,7 @@ function App() {
         })()}
         onSignInWithGoogle={handleSignInWithGoogle}    
         onSignOut={handleSignOut}    
+        userId={userId}
       />
       {showModifyDatabasesForm && (
         <ModifyDatabasesForm
