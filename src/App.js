@@ -32,11 +32,8 @@ function App() {
         // User is signed in, so you can get the user ID.
         setUserId(user.uid);
         setUserPhotoURL(user.photoURL);
-        console.log("User ID:", user.uid); // Use user.uid directly here
-        console.log("User photo URL:", user.photoURL);
       } else {
         // User is signed out
-        console.log("No user signed in.");
         setUserId(null);
         setUserPhotoURL('');
       }
