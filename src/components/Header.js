@@ -20,9 +20,9 @@ function Header({ onAddTable, onDeleteDatabase, onEditDatabaseName, onDownloadDa
                 </div>            
                 <div className='header-buttons'>
                     <button aria-label='download-schema' data-tooltip-id="download-schema" className='header-button' onClick={onDownloadDatabase}><i className="bi bi-filetype-sql"></i></button>
-                    <button aria-label='login' data-tooltip-id="login" onClick={onSignInWithGoogle} className='header-button'><i className="bi bi-google"></i></button>
-                    <button aria-label='logout' data-tooltip-id="logout" onClick={onSignOut} className='header-button'><i className="bi bi-box-arrow-right"></i></button>
                     <a target="_blank" rel="noreferrer" href='https://github.com/ahmad-masud/Database-Schema-Constructor' aria-label='github' data-tooltip-id="github" className='header-button'><i className="bi bi-github"></i></a>
+                    <button aria-label='login' data-tooltip-id="login" onClick={onSignInWithGoogle} className='header-button'><i className="bi bi-box-arrow-in-right"></i></button>
+                    <button aria-label='logout' data-tooltip-id="logout" onClick={onSignOut} className='header-button'><i className="bi bi-box-arrow-right"></i></button>
                 </div>
             </div>
             <Tooltip id="rename-schema" place="bottom" variant="info" content="Rename Schema"/>
