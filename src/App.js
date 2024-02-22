@@ -40,7 +40,7 @@ function App() {
     }
   }, [databaseName, tables, connections, firstLoad]);
   
-  const randomColor = () => {
+  const chooseColor = () => {
     const colors = ["red", "green", "blue", "purple"];
     return colors[tables.length % colors.length];
   };
@@ -57,7 +57,7 @@ function App() {
         const newTable = {
           id: tables.length + 1,
           name: inputValue,
-          color: randomColor(),
+          color: chooseColor(),
           positionX: ((tables.length)*20),
           positionY: ((tables.length)*20 + 50),
           attributes: [{
