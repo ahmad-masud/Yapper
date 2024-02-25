@@ -15,10 +15,12 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
   const [promptAction, setPromptAction] = useState('');
   const tableRef = useRef(null);
   const colors = {
-    "red": "FireBrick", 
-    "green": "#16A085", 
+    "red": "#BD362F",
+    "orange": "#F9A732",
+    "green": "#56AD56", 
     "blue": "SteelBlue", 
-    "purple": "DarkOrchid",
+    "purple": "#9A66CD",
+    "brown": "#AC725E",
   };
   
   const handleUpdatePosition = useCallback((newX, newY) => {
@@ -154,24 +156,29 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
         <div className="table-header" style={{background: colors[color]}}>
           <p className='table-name'>{table.name}</p>
           <div className='tabler-header-buttons'>
-            <button aria-label='add attribute' className='table-header-button' onClick={() => setIsAttributeFormVisible(true)}><i className="fa-solid fa-plus"></i></button>
             <button aria-label='edit table' className='table-header-button' onClick={handleEditTableDetails}><i className="bi bi-pencil-fill"></i></button>
             <button aria-label='delete table' className='table-header-button' onClick={handleDelete}><i className="fa-solid fa-xmark"></i></button>
           </div>
         </div>
         <ul className='attribute-list'>
-        {table.attributes.map((attribute, index) => {
-          return (
-            <li id={`${table.name}-${attribute.name}`}className='attribute' key={index}>    
-              <div>{attribute.name} <sub className="italic">{`(${attribute.type.toLowerCase()})`}</sub></div>
-              <div className='attribute-left'>
-                {attribute.constraints.foreignKey && <i className="fa-solid fa-share-nodes"></i>}
-                {attribute.constraints.primaryKey && <i className="fa-solid fa-key"></i>}
-                <button aria-label='delete attribute' onClick={() => handleDeleteAttribute(index)} className="attribute-action-button"><i className="fa-solid fa-xmark"></i></button>
-              </div>
-            </li>
-          );
-        })}
+          {table.attributes.map((attribute, index) => {
+            return (
+              <li id={`${table.name}-${attribute.name}`}className='attribute' key={index}>    
+                <div>
+                  <span className='attribute-name'>{attribute.name} </span>
+                  {attribute.constraints.foreignKey.attribute && <sup> FK</sup>}
+                  {attribute.constraints.primaryKey && <sup> PK</sup>}
+                  <sub className="italic">{` ${attribute.type.toLowerCase()}`}</sub></div>
+                <div className='attribute-left'>
+                  <button aria-label='delete attribute' onClick={() => handleDeleteAttribute(index)} className="attribute-action-button"><i className="fa-solid fa-xmark"></i></button>
+                </div>
+              </li>
+            );
+          })}
+          <li className='attribute'>
+            Add new attribute
+            <button aria-label='add attribute' className='add-attribute-button' onClick={() => setIsAttributeFormVisible(true)}><i className="fa-solid fa-plus"></i></button>
+          </li>
         </ul>
       </div>
     </div>

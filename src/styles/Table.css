@@ -25,7 +25,7 @@
 }
   
 .table-name {
-    font-size: 1em; /* Large text for the table name */
+    font-size: 1.25em;
     color: white; /* Dark text for contrast */
     background: none;
     font-weight: 600;
@@ -55,6 +55,11 @@
     height: 35px;
     padding: 0 10px;
     align-items: center;
+    
+}
+
+.attribute-name {
+    font-weight: 600;
 }
 
 .attribute-list .attribute:last-child {
@@ -82,6 +87,19 @@
 
 .italic {
     font-style: italic;
+}
+
+.add-attribute {
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-attribute-button {
+    font-size: 1em;
+    color: black;
+    border: none;
+    cursor: pointer;
+    background: none;
 }
 
 @media screen and (max-width: 600px) {

@@ -66,7 +66,7 @@ function App() {
   }, [databaseName, tables, connections, firstLoad]);
   
   const chooseColor = () => {
-    const colors = ["red", "green", "blue", "purple"];
+    const colors = ["red", "orange", "green", "blue", "purple", "brown"];
     return colors[tables.length % colors.length];
   };
 
@@ -85,20 +85,7 @@ function App() {
           color: chooseColor(),
           positionX: ((tables.length)*20),
           positionY: ((tables.length)*20 + 50),
-          attributes: [{
-            "name": "createdAt",
-            "type": "TIMESTAMP",
-            "length": "",
-            "defaultValue": "",
-            "values": "",
-            "constraints": {
-              "notNull": false,
-              "unique": false,
-              "primaryKey": false,
-              "autoIncrement": true,
-              "foreignKey": {}
-            }
-          }],
+          attributes: [],
         };
         setTables([...tables, newTable]);
       }

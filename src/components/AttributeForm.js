@@ -176,7 +176,6 @@ function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
                 </label>
                 <label>
                   <input
-                    disabled={thisTable && thisTable.attributes.some(attr => attr.constraints.primaryKey)}
                     type="checkbox"
                     checked={attributePrimaryKey}
                     onChange={(e) => setAttributePrimaryKey(e.target.checked)}
