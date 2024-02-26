@@ -1,7 +1,7 @@
 import { Tooltip } from 'react-tooltip'
 import '../styles/Header.css';
 
-function Header({ onAddTable, onDeleteDatabase, onEditDatabaseName, onDownloadDatabase, databaseName, onSaveDatabase, onModifyDatabases, onSignInWithGoogle, onSignOut, userId, userPhotoURL }) {
+function Header({ onAddTable, onDeleteDatabase, onEditDatabaseName, onDownloadDatabase, databaseName, onSaveDatabase, onModifyDatabases, onSignInWithGoogle, onSignOut, userId, userPhotoURL, onSnapToGrid, snapToGrid }) {
     return (
         <div className='header-container'>
             <div className='header'>
@@ -17,6 +17,11 @@ function Header({ onAddTable, onDeleteDatabase, onEditDatabaseName, onDownloadDa
                     <button aria-label='delete-schema' data-tooltip-id="delete-schema" className='header-button' onClick={onDeleteDatabase}><i className="bi bi-database-fill-x"></i></button>
                 </div>            
                 <div className='header-buttons'>
+                    {snapToGrid ? 
+                        <button aria-label='drag' data-tooltip-id="snap-or-drag" className='header-button' onClick={onSnapToGrid}><i className="bi bi-arrows-move"></i></button>
+                        :
+                        <button aria-label='snap-to-grid' data-tooltip-id="snap-or-drag" className='header-button' onClick={onSnapToGrid}><i className="bi bi-grid-fill"></i></button>
+                    }
                     <button aria-label='download-schema' data-tooltip-id="download-schema" className='header-button' onClick={onDownloadDatabase}><i className="bi bi-filetype-sql"></i></button>
                     <a target="_blank" rel="noreferrer" href='https://github.com/ahmad-masud/Database-Schema-Constructor' aria-label='github' data-tooltip-id="github" className='header-button'><i className="bi bi-github"></i></a>
                     {!userId && <button aria-label='login' data-tooltip-id="login" onClick={onSignInWithGoogle} className='header-button'><i className="bi bi-box-arrow-in-right"></i></button>}
@@ -28,6 +33,7 @@ function Header({ onAddTable, onDeleteDatabase, onEditDatabaseName, onDownloadDa
             <Tooltip id="create-table" place="bottom" variant="info" content="Create Table"/>
             <Tooltip id="save-schema" place="bottom" variant="info" content="Save Schema"/>
             <Tooltip id="modify-schemas" place="bottom" variant="info" content="Modify Cloud Schemas"/>
+            <Tooltip id="snap-or-drag" place="bottom" variant="info" content={snapToGrid ? "Drag" : "Snap To Grid"}/>
             <Tooltip id="download-schema" place="bottom" variant="info" content="Export as SQL Query"/>
             <Tooltip id="delete-schema" place="bottom" variant="info" content="Delete Schema"/>
             <Tooltip id="github" place="bottom" variant="info" content="Github Repo"/>

@@ -7,7 +7,6 @@
     overflow: hidden;
     min-height: 35px;
     min-width: 200px;
-    cursor: move;
     z-index: 100;
 }
 
@@ -110,4 +109,8 @@
 
 .bi-plus, .bi-x {
     font-size: 1.5em;
+}
+
+.draggable {
+    cursor: move;
 }

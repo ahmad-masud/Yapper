@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback , useRef } from 'react';
 import GenericForm from './GenericForm.js';
 import Prompt from './Prompt.js';
 
-function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNames, onDeleteAttribute, color, positionX, positionY, onUpdatePosition }) {
+function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, allTableNames, onDeleteAttribute, color, positionX, positionY, onUpdatePosition, snapToGrid }) {
   const [isAttributeFormVisible, setIsAttributeFormVisible] = useState(false);
   const [isEditFormVisible, setIsEditFormVisible] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -28,6 +28,9 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
   }, [table.id, onUpdatePosition]);
 
   const onMouseDown = (e) => {
+    if (snapToGrid) {
+      return;
+    }
     setIsDragging(true);
     setRelPosition({
       x: e.pageX - position.x,
@@ -37,10 +40,13 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
   };
 
   const onMouseUp = useCallback(() => {
+    if (snapToGrid) {
+      return;
+    }
     if (isDragging) {
       setIsDragging(false);
     }
-  }, [isDragging]);  
+  }, [isDragging, snapToGrid]);  
 
   const getTableDimensions = () => {
     if (tableRef.current) {
@@ -51,7 +57,7 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
   };
 
   const onMouseMove = useCallback((e) => {
-    if (!isDragging) {
+    if (!isDragging || snapToGrid) {
       return;
     }
     const { width: tableWidth, height: tableHeight } = getTableDimensions();
@@ -68,9 +74,12 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
     });
 
     handleUpdatePosition(position.x, position.y);
-  }, [isDragging, relPosition, position, handleUpdatePosition]); 
+  }, [isDragging, relPosition, position, handleUpdatePosition, snapToGrid]); 
 
   useEffect(() => {
+    if (snapToGrid) {
+      return;
+    }
     if (isDragging) {
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
@@ -83,7 +92,7 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
-  }, [isDragging, onMouseMove, onMouseUp]);
+  }, [isDragging, onMouseMove, onMouseUp, snapToGrid]);
 
   const handleEditTableDetails = () => {
     setIsEditFormVisible(true);
@@ -148,9 +157,9 @@ function Table({ tables, table, onAddAttribute, onDeleteTable, onUpdateTable, al
         />
       )}
       <div 
-        style= {window.innerWidth >= 600 ? { left: `${position.x}px`, top: `${position.y}px`, position: 'absolute' } : {}}
+        style= {!snapToGrid ? { left: `${position.x}px`, top: `${position.y}px`, position: 'absolute' } : {}}
         onMouseDown={onMouseDown}
-        className='table-container'
+        className={snapToGrid ? 'table-container' : 'table-container draggable'}
         ref={tableRef}
       >
         <div className="table-header" style={{background: colors[color]}}>

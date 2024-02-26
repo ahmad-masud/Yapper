@@ -25,6 +25,7 @@ function App() {
   const [userPhotoURL, setUserPhotoURL] = useState('');
   const [showModifyDatabasesForm, setShowModifyDatabasesForm] = useState(false);
   const googleProvider = new GoogleAuthProvider();
+  const [snapToGrid, setSnapToGrid] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -46,10 +47,11 @@ function App() {
   useEffect(() => {
     const savedState = localStorage.getItem('dbSchemaConstructorState');
     if (savedState) {
-      const { databaseName: loadedDatabaseName, tables: loadedTables, connections: loadedConnections } = JSON.parse(savedState);
+      const { databaseName: loadedDatabaseName, tables: loadedTables, connections: loadedConnections, snapToGrid: loadedSnapToGrid } = JSON.parse(savedState);
       setDatabaseName(loadedDatabaseName);
       setTables(loadedTables);
       setConnections(loadedConnections);
+      setSnapToGrid(loadedSnapToGrid);
     }
     setFirstLoad(true);
   }, []);
@@ -57,13 +59,13 @@ function App() {
   useEffect(() => {
     if (firstLoad) {
       if (tables.length > 0 || databaseName !== "" || connections.length > 0) {
-        const appState = { databaseName, tables, connections };
+        const appState = { databaseName, tables, connections, snapToGrid };
         localStorage.setItem('dbSchemaConstructorState', JSON.stringify(appState));
       } else {
         showEditDatabaseNameForm(); 
       }
     }
-  }, [databaseName, tables, connections, firstLoad]);
+  }, [databaseName, tables, connections, snapToGrid, firstLoad]);
   
   const chooseColor = () => {
     const colors = ["red", "orange", "green", "blue", "purple", "brown"];
@@ -205,9 +207,9 @@ function App() {
     }));
   };  
 
-  function handleSaveDatabase() { // Pass the userId as an argument
+  const handleSaveDatabase = () => { // Pass the userId as an argument
     if (userId) {
-      const databaseState = { databaseName, tables, connections };
+      const databaseState = { databaseName, tables, connections, snapToGrid };
       const userDocRef = doc(db, `users/${userId}/databases`, databaseName);
       setDoc(userDocRef, databaseState);
     } else {
@@ -215,7 +217,7 @@ function App() {
       setPromptAction('alert');
       setShowPrompt(true);
     }
-  }
+  };
 
   const handleModifyDatabases = async (action, databaseId) => {
     const databaseRef = doc(db, `users/${userId}/databases`, databaseId);
@@ -240,6 +242,7 @@ function App() {
             setDatabaseName(databaseState.databaseName);
             setTables(adjustedTables);
             setConnections(databaseState.connections);
+            setSnapToGrid(databaseState.snapToGrid);
             window.location.reload();
           } else {
             setPromptText("Invalid database format.");
@@ -293,7 +296,10 @@ function App() {
         setPromptAction('alert');
         setShowPrompt(true);
       });
+  };
 
+  const handleSnapToGrid = () => {
+    setSnapToGrid(prevState => !prevState);
   };
 
   return (
@@ -314,6 +320,8 @@ function App() {
         onSignOut={handleSignOut}    
         userId={userId}
         userPhotoURL={userPhotoURL}
+        onSnapToGrid={handleSnapToGrid}
+        snapToGrid={snapToGrid}
       />
       {showModifyDatabasesForm && (
         <ModifyDatabasesForm
@@ -346,6 +354,7 @@ function App() {
         onDeleteAttribute={onDeleteAttribute}
         onUpdatePosition={handleUpdatePosition}
         connections={connections}
+        snapToGrid={snapToGrid}
       />
     </div>
   );
