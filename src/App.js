@@ -1,6 +1,6 @@
 import './styles/App.css';
 import Header from './components/Header.js';
-import Content from './components/Content.js';
+import Schema from './components/Schema.js';
 import { useState, useEffect } from 'react';
 import GenericForm from './components/GenericForm.js';
 import Prompt from './components/Prompt.js';
@@ -345,7 +345,7 @@ function App() {
           initialValue={formAction === 'editDatabaseName' ? databaseName : ""}
         />
       )}
-      <Content
+      <Schema
         tables={tables}
         allTableNames={tables.map(t => t.name)}
         onDeleteTable={handleDeleteTable}

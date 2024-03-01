@@ -103,3 +103,14 @@ input:disabled,
 select:disabled {
     cursor: not-allowed;
 }
+
+.hidden {
+    display: none;
+}
+
+.check-box-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}

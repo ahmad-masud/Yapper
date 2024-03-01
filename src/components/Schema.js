@@ -1,8 +1,8 @@
-import '../styles/Content.css';
+import '../styles/Schema.css';
 import Table from './Table.js';
 import Connections from './Connections.js';
 
-function Content({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAttribute, onDeleteAttribute, onUpdatePosition, connections, snapToGrid }) {
+function Schema({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAttribute, onDeleteAttribute, onUpdatePosition, connections, snapToGrid }) {
     return (
         <Connections onUpdatePosition={onUpdatePosition} connections={connections} snapToGrid={snapToGrid} >
             <div className={snapToGrid ? 'snap-to-grid' : ''}>
@@ -28,4 +28,4 @@ function Content({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAtt
     );
 }
 
-export default Content;
+export default Schema;

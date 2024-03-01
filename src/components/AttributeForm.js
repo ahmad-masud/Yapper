@@ -115,7 +115,7 @@ function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
                   <option value="POLYGON">POLYGON</option>
                 </select>
                 <input
-                  disabled={!['CHAR', 'VARCHAR', 'BINARY', 'VARBINARY', 'DECIMAL'].includes(attributeType)}
+                  className={!['CHAR', 'VARCHAR', 'BINARY', 'VARBINARY', 'DECIMAL'].includes(attributeType) ? 'hidden' : ''}
                   required={['CHAR', 'VARCHAR', 'BINARY', 'VARBINARY'].includes(attributeType)}
                   type="number"
                   placeholder="Length"
@@ -124,7 +124,7 @@ function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
                   onChange={(e) => setAttributeLength(e.target.value)}
                 />
                 <input
-                  disabled={!['ENUM', 'SET'].includes(attributeType)}
+                  className={!['ENUM', 'SET'].includes(attributeType) ? 'hidden' : ''}
                   required={['ENUM', 'SET'].includes(attributeType)}
                   type="text"
                   placeholder="SET/ENUM Values (comma separated)"
@@ -144,7 +144,8 @@ function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
                   onChange={(e) => setAttributeComment(e.target.value)}
                 />
                 <select
-                  disabled={!isForeignKey}
+                  className={isForeignKey ? '' : 'hidden'}
+                  required={isForeignKey}
                   value={foreignKeyTable && foreignKeyAttribute ? [foreignKeyTable, foreignKeyAttribute].join(',') : ''}
                   onChange={handleChangeForeignKey}
                 >
@@ -160,57 +161,58 @@ function AttributeForm({ tables, thisTable, onCancel, onSubmit }) {
                     )
                   }
                 </select>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={attributeNotNull}
-                    onChange={(e) => setAttributeNotNull(e.target.checked)}
-                  /> Not Null
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={attributeUnique}
-                    onChange={(e) => setAttributeUnique(e.target.checked)}
-                  /> Unique
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={attributePrimaryKey}
-                    onChange={(e) => setAttributePrimaryKey(e.target.checked)}
-                  /> Primary Key
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={attributeAutoIncrement}
-                    onChange={(e) => setAttributeAutoIncrement(e.target.checked)}
-                  /> Auto Increment
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={isForeignKey}
-                    onChange={
-                      (e) => {
-                        if (!e.target.checked) {
-                          setForeignKeyTable('');
-                          setForeignKeyAttribute('');
+                <div className='check-box-container'>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={attributePrimaryKey}
+                      onChange={(e) => setAttributePrimaryKey(e.target.checked)}
+                    /> Primary Key
+                  </label>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={isForeignKey}
+                      onChange={
+                        (e) => {
+                          if (!e.target.checked) {
+                            setForeignKeyTable('');
+                            setForeignKeyAttribute('');
+                          }
+                          setIsForeignKey(e.target.checked)
                         }
-                        setIsForeignKey(e.target.checked)
                       }
-                    }
-                  /> Foreign Key
-                </label>
-                <label>
-                  <input
-                    disabled={!['INTEGER', 'SMALLINT', 'BIGINT'].includes(attributeType)}
-                    type="checkbox"
-                    checked={isUnsigned}
-                    onChange={(e) => setIsUnsigned(e.target.checked)}
-                  /> Unsigned
-                </label>
+                    /> Foreign Key
+                  </label>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={attributeNotNull}
+                      onChange={(e) => setAttributeNotNull(e.target.checked)}
+                    /> Not Null
+                  </label>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={attributeUnique}
+                      onChange={(e) => setAttributeUnique(e.target.checked)}
+                    /> Unique
+                  </label>
+                  <label style={{ display: ['INTEGER', 'SMALLINT', 'BIGINT'].includes(attributeType) ? '' : 'none' }}>
+                    <input
+                      type="checkbox"
+                      checked={attributeAutoIncrement}
+                      onChange={(e) => setAttributeAutoIncrement(e.target.checked)}
+                    /> Auto Increment
+                  </label>
+                  <label style={{ display: ['INTEGER', 'SMALLINT', 'BIGINT'].includes(attributeType) ? '' : 'none' }}>
+                    <input
+                      type="checkbox"
+                      checked={isUnsigned}
+                      onChange={(e) => setIsUnsigned(e.target.checked)}
+                    /> Unsigned
+                  </label>
+                </div>
                 <div className='form-buttons-container'>
                   <button className="submit-button" type="submit">Submit</button>
                   <button className="cancel-button" type="button" onClick={onCancel}>Cancel</button>
