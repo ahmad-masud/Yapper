@@ -5,6 +5,10 @@ function Connections({ onUpdatePosition, connections, children, snapToGrid }) {
     const jsPlumbContainerRef = useRef(null);
 
     useEffect(() => {
+        jsPlumb.importDefaults({
+            ConnectionsDetachable: false,
+        });
+        
         if (!snapToGrid) {
             jsPlumb.setContainer(jsPlumbContainerRef.current);
 
