@@ -2,9 +2,9 @@ import '../styles/Schema.css';
 import Table from './Table.js';
 import Connections from './Connections.js';
 
-function Schema({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAttribute, onDeleteAttribute, onUpdatePosition, connections, snapToGrid }) {
+function Schema({ tables, onDeleteTable, onUpdateTable, allTableNames, onAddAttribute, onDeleteAttribute, onUpdatePosition, connections, snapToGrid, connector }) {
     return (
-        <Connections onUpdatePosition={onUpdatePosition} connections={connections} snapToGrid={snapToGrid} >
+        <Connections onUpdatePosition={onUpdatePosition} connections={connections} snapToGrid={snapToGrid} connector={connector} >
             <div className={snapToGrid ? 'snap-to-grid' : ''}>
                 {tables.map((table) => (
                     <Table

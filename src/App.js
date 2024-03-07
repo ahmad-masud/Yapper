@@ -26,6 +26,7 @@ function App() {
   const [showModifyDatabasesForm, setShowModifyDatabasesForm] = useState(false);
   const googleProvider = new GoogleAuthProvider();
   const [snapToGrid, setSnapToGrid] = useState(false);
+  const [connector, setConnector] = useState(1);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -302,6 +303,10 @@ function App() {
     setSnapToGrid(prevState => !prevState);
   };
 
+  const handleChangeConnector = () => {
+    setConnector(prevState => prevState === 1 ? 2 : 1);
+  };
+
   return (
     <div className="App">
       <Header
@@ -322,6 +327,8 @@ function App() {
         userPhotoURL={userPhotoURL}
         onSnapToGrid={handleSnapToGrid}
         snapToGrid={snapToGrid}
+        onChangeConnector={handleChangeConnector}
+        connector={connector}
       />
       {showModifyDatabasesForm && (
         <ModifyDatabasesForm
@@ -355,6 +362,7 @@ function App() {
         onUpdatePosition={handleUpdatePosition}
         connections={connections}
         snapToGrid={snapToGrid}
+        connector={connector}
       />
     </div>
   );

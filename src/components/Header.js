@@ -1,7 +1,7 @@
 import { Tooltip } from 'react-tooltip'
 import '../styles/Header.css';
 
-function Header({ onAddTable, onDeleteDatabase, onEditDatabaseName, onDownloadDatabase, databaseName, onSaveDatabase, onModifyDatabases, onSignInWithGoogle, onSignOut, userId, userPhotoURL, onSnapToGrid, snapToGrid }) {
+function Header({ onAddTable, onDeleteDatabase, onEditDatabaseName, onDownloadDatabase, databaseName, onSaveDatabase, onModifyDatabases, onSignInWithGoogle, onSignOut, userId, userPhotoURL, onSnapToGrid, snapToGrid, onChangeConnector, connector }) {
     return (
         <div className='header-container'>
             <div className='header'>
@@ -17,6 +17,11 @@ function Header({ onAddTable, onDeleteDatabase, onEditDatabaseName, onDownloadDa
                     <button aria-label='delete-schema' data-tooltip-id="delete-schema" className='header-button' onClick={onDeleteDatabase}><i className="bi bi-database-fill-x"></i></button>
                 </div>            
                 <div className='header-buttons'>
+                    {connector === 1 ? 
+                        <button aria-label='change-connector' data-tooltip-id="change-connector" className='header-button' onClick={onChangeConnector}><i className="bi bi-bezier"></i></button>
+                        :
+                        <button aria-label='change-connector' data-tooltip-id="change-connector" className='header-button' onClick={onChangeConnector}><i className="bi bi-diagram-3"></i></button>
+                    }
                     {snapToGrid ? 
                         <button aria-label='drag' data-tooltip-id="snap-or-drag" className='header-button' onClick={onSnapToGrid}><i className="bi bi-arrows-move"></i></button>
                         :
@@ -39,6 +44,7 @@ function Header({ onAddTable, onDeleteDatabase, onEditDatabaseName, onDownloadDa
             <Tooltip id="github" place="bottom" variant="info" content="Github Repo"/>
             <Tooltip id="login" place="bottom" variant="info" content="Login"/>
             <Tooltip id="logout" place="bottom" variant="info" content="Logout"/>
+            <Tooltip id="change-connector" place="bottom" variant="info" content={connector === 1 ? "Bezier" : "Flowchart"}/>
         </div>
     );
 }
